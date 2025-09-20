@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="left-column">
+<div class="dashboard-page">
   <div class="card">
     <div class="cards">
       <div class="stat"><h4>Appointments Today</h4><div class="count" id="todayCount"></div></div>

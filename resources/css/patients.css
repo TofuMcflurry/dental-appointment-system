@@ -1,0 +1,94 @@
+/* Patients Page Styles */
+.content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.06);
+  margin-bottom: 20px;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.content-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #1A2B4C;
+}
+
+.search-box input {
+  padding: 8px 12px;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 6px;
+  font-size: 14px;
+  width: 200px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table thead th {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-weight: 600;
+  color: #8b95a6;
+}
+
+.table tbody td {
+  padding: 10px 8px;
+  border-bottom: 1px dashed rgba(0,0,0,0.04);
+}
+
+.table .empty {
+  text-align: center;
+  color: #8b95a6;
+  padding: 12px;
+}
+
+/* Patient Details Panel */
+.details-wrap {
+  display: none; /* Hidden by default, show only when patient selected */
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.details-wrap h3 {
+  margin-top: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1A2B4C;
+}
+
+.details-wrap .info {
+  margin-bottom: 12px;
+}
+
+.details-wrap .placeholder {
+  color: #8b95a6;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+}

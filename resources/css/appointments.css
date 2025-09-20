@@ -1,0 +1,169 @@
+/* Scope everything under #appointments */
+#appointments {
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Main content table + details */
+#appointments .main-content {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Card Table */
+#appointments .card {
+  flex: 2 1 600px;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 1px 0 rgba(15,23,42,0.06), inset 0 -1px 0 rgba(0,0,0,0.02);
+}
+
+#appointments .card h3 {
+  margin: 0 0 12px 0;
+  font-weight: 600;
+  color: #1A2B4C;
+  font-size: 16px;
+}
+
+/* Search Box */
+#appointments .search-box {
+  margin-bottom: 12px;
+}
+#appointments #search {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.15);
+  width: 100%;
+  font-size: 14px;
+}
+
+/* Table */
+#appointments table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+#appointments table th,
+#appointments table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  text-align: left;
+}
+#appointments table th {
+  color: #8b95a6;
+  font-weight: 600;
+}
+#appointments table td.empty {
+  text-align: center;
+  color: #8b95a6;
+  padding: 12px;
+}
+
+/* Details Panel */
+#appointments .details {
+  flex: 1 1 280px;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 16px;
+  box-shadow: 0 1px 0 rgba(15,23,42,0.06), inset 0 -1px 0 rgba(0,0,0,0.02);
+}
+
+#appointments .details h3 {
+  margin: 0 0 12px 0;
+  font-weight: 600;
+  color: #1A2B4C;
+  font-size: 16px;
+}
+#appointments .details h4 {
+  margin: 10px 0 6px 0;
+  font-weight: 500;
+  color: #1A2B4C;
+  font-size: 14px;
+}
+#appointments .details .info p.placeholder {
+  color: #8b95a6;
+  font-size: 13px;
+  margin: 4px 0;
+}
+
+/* Buttons */
+#appointments .details .actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+#appointments .details button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 13px;
+}
+#appointments .details button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+#appointments .details button#confirmBtn { background: #1A2B4C; color: #fff; }
+#appointments .details button#cancelBtn { background: #ddd; color: #111; }
+#appointments .details button#reminderBtn { background: #f7f7f7; color: #1A2B4C; }
+#appointments .details button#editBtn { background: #59677f; color: #fff; }
+
+/* Modal */
+#appointments .modal {
+  display: none;
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+#appointments .modal-content {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+  max-width: 95%;
+}
+#appointments .modal-content h3 {
+  margin-top: 0;
+  font-weight: 600;
+  color: #1A2B4C;
+}
+#appointments .modal-content form label {
+  display: block;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1A2B4C;
+}
+#appointments .modal-content form input,
+#appointments .modal-content form select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 6px;
+}
+#appointments .modal-content .actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+#appointments .modal-content button {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+#appointments .modal-content button[type="submit"] { background: #1A2B4C; color:#fff; }
+#appointments .modal-content button#closeModal { background: #ddd; color:#111; }

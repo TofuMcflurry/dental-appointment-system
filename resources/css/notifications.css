@@ -1,0 +1,45 @@
+/* Notifications List Styling */
+  #notificationsList .notification {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  #notificationsList .notification:hover {
+    background: #f9fbfc;
+  }
+  #notificationsList .notification:last-child {
+    border-bottom: none;
+  }
+  #notificationsList .notification-icon {
+    font-size: 18px;
+    color: var(--accent);
+  }
+  #notificationsList .notification-text {
+    display: flex;
+    flex-direction: column;
+  }
+  #notificationsList .notification-text strong {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  #notificationsList .notification-text small {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  #notificationsList .notification.unread strong {
+    font-weight: 700;
+  }
+  #notificationsList .notification.unread::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #007bff;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-top: 6px;
+  }

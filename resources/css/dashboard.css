@@ -1,0 +1,184 @@
+.dashboard-page {
+  --bg: #f1f4f6;
+  --card: #ffffff;
+  --muted: #8b95a6;
+  --accent: #1A2B4C;
+  --shadow: 0 1px 0 rgba(15,23,42,0.06), inset 0 -1px 0 rgba(0,0,0,0.02);
+  --radius: 10px;
+}
+
+.dashboard-page * { box-sizing: border-box; }
+
+.dashboard-page .cards {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.dashboard-page .stat {
+  background: var(--card);
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(0,0,0,0.06);
+  min-width: 160px;
+  flex: 1 1 160px;
+  box-shadow: var(--shadow);
+}
+
+.dashboard-page .stat h4 {
+  margin: 0;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.dashboard-page .stat .count {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 10px;
+  color: #111;
+  display: inline-block;
+}
+
+.dashboard-page .stat .count.hidden { display: none; }
+
+/* Calendar + right column */
+.dashboard-page .left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dashboard-page .card {
+  background: var(--card);
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: var(--shadow);
+}
+
+.dashboard-page .card h3 {
+  margin: 0 0 12px 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.dashboard-page .calendar-main { flex: 1; }
+
+.dashboard-page .month-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dashboard-page .month-header .month { font-weight: 600; color: var(--accent); }
+
+.dashboard-page .calendar-grid {
+  border-radius: 8px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.dashboard-page .weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.dashboard-page .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+
+.dashboard-page .day {
+  min-height: 54px;
+  border-radius: 6px;
+  padding: 8px;
+  border: 1px solid rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: linear-gradient(#fff, #fcfdff);
+}
+
+.dashboard-page .day .date-num {
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dashboard-page .day.app {
+  background: linear-gradient(180deg,#f3f6f8,#eef2f5);
+}
+
+.dashboard-page .day.empty { background: transparent; border: 0; }
+
+.dashboard-page .right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dashboard-page .patients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dashboard-page .audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.dashboard-page .audit-table thead th {
+  text-align: left;
+  padding: 10px 8px;
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.dashboard-page .audit-table tbody td {
+  padding: 10px 8px;
+  border-bottom: 1px dashed rgba(0,0,0,0.04);
+}
+
+.dashboard-page .audit-empty {
+  color: var(--muted);
+  padding: 12px;
+  text-align: center;
+}
+
+.dashboard-page .notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dashboard-page .notif-item {
+  padding: 10px;
+  border-radius: 8px;
+  background: #f7f8fa;
+  border-left: 6px solid rgba(89,103,127,0.12);
+}
+
+.dashboard-page .notif-title {
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.dashboard-page .notif-desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+@media (max-width:1000px) {
+  .dashboard-page .app { grid-template-columns: 1fr; padding: 14px; }
+}
