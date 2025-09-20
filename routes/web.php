@@ -1,16 +1,31 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return auth()->check()
+        ? redirect()->route('admin.dashboard')
+        : view('welcome');
 });
 
-// Dashboard route (requires login and email verification)
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
+    // Appointment
+    Route::view('/appointments', 'dashboard.appointments')->name('appointments');
+
+    // Patients
+    Route::view('/patients', 'dashboard.patients')->name('patients');
+
+    // Notifications
+    Route::view('/notifications', 'dashboard.notifications')->name('notifications');
+
+    // Settings
+    Route::view('/settings', 'dashboard.settings')->name('settings');
+});
 
 // Profile routes (requires authentication)
 Route::middleware('auth')->group(function () {
