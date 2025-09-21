@@ -58,6 +58,5 @@
     <button class="btn cancel" id="cancelBtn" data-i18n="cancel">Cancel</button>
   </div>
 </section>
-
 @endsection
 

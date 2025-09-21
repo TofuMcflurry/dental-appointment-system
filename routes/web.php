@@ -14,16 +14,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    // Appointment
     Route::view('/appointments', 'dashboard.appointments')->name('appointments');
 
-    // Patients
     Route::view('/patients', 'dashboard.patients')->name('patients');
 
-    // Notifications
-    Route::view('/notifications', 'dashboard.notifications')->name('notifications');
+    Route::view('/audittrail', 'dashboard.audittrail')->name('audittrail');
 
-    // Settings
     Route::view('/settings', 'dashboard.settings')->name('settings');
 });
 

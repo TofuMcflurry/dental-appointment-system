@@ -12,8 +12,8 @@
     'resources/js/dashboard.js',
     'resources/css/appointments.css',
     'resources/js/appointments.js',
-    'resources/css/notifications.css',
-    'resources/js/notifications.js',
+    'resources/css/audittrail.css',
+    'resources/js/audittrail.js',
     'resources/css/patients.css',
     'resources/js/patients.js',
     'resources/css/settings.css',
@@ -59,7 +59,7 @@
         <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
         <a href="{{ route('admin.appointments') }}" class="{{ request()->routeIs('admin.appointments') ? 'active' : '' }}">Appointments</a>
         <a href="{{ route('admin.patients') }}" class="{{ request()->routeIs('admin.patients') ? 'active' : '' }}">Patients</a>
-        <a href="{{ route('admin.notifications') }}" class="{{ request()->routeIs('admin.notifications') ? 'active' : '' }}">Notifications</a>
+        <a href="{{ route('admin.audittrail') }}" class="{{ request()->routeIs('admin.audittrail') ? 'active' : '' }}">Audit Trail</a>
         <a href="{{ route('admin.settings') }}" class="{{ request()->routeIs('admin.settings') ? 'active' : '' }}">Settings</a>
       </nav>
     </aside>
