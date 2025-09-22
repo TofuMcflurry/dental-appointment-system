@@ -62,7 +62,6 @@
 
     <!-- RIGHT SECTION: Image -->
     <div class="image-section">
-        <img src="{{ asset('images/dentist.jpg') }}" alt="Dental Clinic">
     </div>
 </div>
 
