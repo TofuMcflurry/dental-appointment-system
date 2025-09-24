@@ -1,139 +1,112 @@
-* {
-  box-sizing: border-box;
-}
 body {
-  font-size: 14px;
+  margin: 0;
+  font-family: 'Inclusive Sans', sans-serif;
+  background: #f5f9ff;
 }
-.v598_51 {
+
+.container {
+  position: relative;
   width: 100%;
-  height: 1016px;
-  background: rgba(255,255,255,1);
-  opacity: 1;
-  position: absolute;
-  top: 0px;
-  left: 0px;
+  height: 100vh;
   overflow: hidden;
 }
-.v598_52 {
+
+/* header */
+header {
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  right: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+}
+
+.logo {
+  font-family: 'Inknut Antiqua', serif;
+  font-size: 22px;
+  font-weight: bold;
+  color: #0a2a66;
+}
+
+.auth-buttons .btn {
+  margin-left: 10px;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+/* login button */
+.btn.login {
+  background: #0a2a66;
+  color: #fff;
+}
+.btn.login:hover {
+  background: #123b99;
+}
+
+/* register button */
+.btn.register {
+  border: 1px solid #0a2a66;
+  background: #fff;
+  color: #0a2a66;
+}
+.btn.register:hover {
+  background: #0a2a66;
+  color: #fff;
+}
+
+/* hero section */
+.hero {
   width: 100%;
   height: 100%;
-  background: url("../images/v598_52.png");
-  background-repeat: no-repeat;
-  background-position: center center;
   background-size: cover;
-  opacity: 1;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  overflow: hidden;
+  background-position: center;
+  position: relative;
 }
-.v598_54 {
-  width: 676px;
-  height: 383px;
-  background: rgba(26,43,76,0.6000000238418579);
-  opacity: 1;
+
+.hero .overlay {
   position: absolute;
-  top: 405px;
-  left: 181px;
-  border: 1px solid rgba(51,51,51,1);
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  overflow: hidden;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.2);
+}
+
+.hero .content {
+  position: absolute;
+  top: 35%;
+  left: 50px;
+  color: white;
+  max-width: 420px;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-size: 40px;
+  line-height: 1.2;
+  background: rgba(0,0,30,0.5);
+  padding: 20px 25px;
+  border-radius: 12px;
+}
+
+.hero p {
+  margin-top: 20px;
+  font-size: 20px;
 }
 .v598_64 {
   width: 100%;
-  height: 158px;
+  height: 100px;
   background: rgba(255,255,255,0.800000011920929);
   opacity: 1;
   position: absolute;
   top: 0px;
   left: 0px;
   overflow: hidden;
-}
-.v598_55 {
-  width: 672px;
-  color: rgba(255,255,255,1);
-  position: absolute;
-  top: 836px;
-  left: 185px;
-  font-family: Inclusive Sans;
-  font-weight: Regular;
-  font-size: 33px;
-  opacity: 1;
-  text-align: left;
-}
-.v598_57 {
-  width: 411px;
-  color: rgba(255,255,255,1);
-  position: absolute;
-  top: 429px;
-  left: 229px;
-  font-family: Inclusive Sans;
-  font-weight: Regular;
-  font-size: 50px;
-  opacity: 1;
-  text-align: left;
-}
-.v598_53 {
-  width: 112px;
-  height: 45px;
-  background: rgba(26,43,76,1);
-  opacity: 1;
-  position: absolute;
-  top: 63px;
-  left: 1240px;
-  border: 1px solid rgba(11,61,145,1);
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  overflow: hidden;
-}
-.v598_58 {
-  width: 57px;
-  color: rgba(255,255,255,1);
-  position: absolute;
-  top: 74px;
-  left: 1269px;
-  font-family: Inclusive Sans;
-  font-weight: Regular;
-  font-size: 19px;
-  opacity: 1;
-  text-align: left;
-}
-.v598_56 {
-  width: 112px;
-  height: 44px;
-  background: rgba(255,255,255,0.20000000298023224);
-  opacity: 1;
-  position: absolute;
-  top: 64px;
-  left: 1380px;
-  border: 1px solid rgba(16,16,16,1);
-}
-.v598_59 {
-  width: 79px;
-  color: rgba(51,51,51,1);
-  position: absolute;
-  top: 74px;
-  left: 1396px;
-  font-family: Inclusive Sans;
-  font-weight: Regular;
-  font-size: 20px;
-  opacity: 1;
-  text-align: left;
-}
-.v598_60 {
-  width: 305px;
-  color: rgba(11,61,145,1);
-  position: absolute;
-  top: 41px;
-  left: 190px;
-  font-family: Inknut Antiqua;
-  font-weight: Regular;
-  font-size: 35px;
-  opacity: 1;
-  text-align: left;
 }

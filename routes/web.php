@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Patient\PatientDashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::view('/settings', 'dashboard.settings')->name('settings');
 });
+
+Route::prefix('patient')->middleware(['auth'])->name('patient.')->group(function () {
+    Route::get('/dashboard', [PatientDashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/appointments', [PatientDashboardController::class, 'appointments'])->name('appointments');
+    Route::get('/notifications', [PatientDashboardController::class, 'notifications'])->name('notifications');
+    Route::get('/settings', [PatientDashboardController::class, 'settings'])->name('settings');
+});
+
 
 // Profile routes (requires authentication)
 Route::middleware('auth')->group(function () {

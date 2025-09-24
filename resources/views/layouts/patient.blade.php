@@ -1,24 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>LCAD Dental Care — Admin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCAD Dental Care Patient Dashboard</title>
 
-  <!-- Google font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  @vite([
-    'resources/css/admin/dashboard.css',
-    'resources/js/admin/dashboard.js',
-    'resources/css/admin/appointments.css',
-    'resources/js/admin/appointments.js',
-    'resources/css/admin/audittrail.css',
-    'resources/js/admin/audittrail.js',
-    'resources/css/admin/patients.css',
-    'resources/js/admin/patients.js',
-    'resources/css/admin/settings.css',
-    'resources/js/admin/settings.js'
-  ])
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/patient.css') }}">
+
+
+    <!-- Shared CSS -->
+    @vite([
+        'resources/css/patient/patient.css',
+        'resources/css/patient/dashboard.css',
+        'resources/js/patient/dashboard.js',
+        'resources/js/patient/appointments.js',
+        'resources/js/patient/core.js',
+        'resources/js/patient/notifications.js',
+        'resources/js/patient/settings.js',
+    ])
+</head>
   <style>
     :root{
       --bg:#f1f4f6;
@@ -46,28 +49,26 @@
     .header .user {display:flex;align-items:center;gap:18px;font-weight:500}
     .header .logout {cursor:pointer;color:#fff;background:#59677f;padding:6px 14px;border-radius:6px;font-size:14px;border:none;}
   </style>
-</head>
 <body>
   <div class="app">
-    <!-- SIDEBAR -->
+    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="brand">
         <svg width="34" height="34" viewBox="0 0 24 24"><rect rx="6" width="24" height="24" fill="#1A2B4C"/></svg>
-        <h2>LCAD Dental Care</h2>
+        <h2>LCAD Dental</h2>
       </div>
       <nav class="nav">
-        <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
-        <a href="{{ route('admin.appointments') }}" class="{{ request()->routeIs('admin.appointments') ? 'active' : '' }}">Appointments</a>
-        <a href="{{ route('admin.patients') }}" class="{{ request()->routeIs('admin.patients') ? 'active' : '' }}">Patients</a>
-        <a href="{{ route('admin.audittrail') }}" class="{{ request()->routeIs('admin.audittrail') ? 'active' : '' }}">Audit Trail</a>
-        <a href="{{ route('admin.settings') }}" class="{{ request()->routeIs('admin.settings') ? 'active' : '' }}">Settings</a>
+        <a href="{{ route('patient.dashboard') }}" class="{{ request()->routeIs('patient.dashboard') ? 'active' : '' }}"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="{{ route('patient.appointments') }}" class="{{ request()->routeIs('patient.appointments') ? 'active' : '' }}"><i class="fa-solid fa-calendar-check"></i> Appointments</a>
+        <a href="{{ route('patient.notifications') }}" class="{{ request()->routeIs('patient.notifications') ? 'active' : '' }}"><i class="fa-solid fa-bell"></i> Notifications</a>
+        <a href="{{ route('patient.settings') }}" class="{{ request()->routeIs('patient.settings') ? 'active' : '' }}"><i class="fa-solid fa-gear"></i> Settings</a>
       </nav>
     </aside>
 
-    <!-- MAIN PANEL -->
-    <main class="panel">
+    <!-- Main Panel -->
+    <main class="panel"> <!-- dati: main-content -->
       <header class="header">
-        <div class="title">@yield('title', 'Admin Dashboard')</div>
+        <h1 class="title">@yield('title')</h1>
         <div class="user">
           <div>{{ Auth::user()->name }}</div>
           <form method="POST" action="{{ route('logout') }}">
