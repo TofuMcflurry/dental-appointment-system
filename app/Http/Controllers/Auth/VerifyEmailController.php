@@ -20,7 +20,15 @@ class VerifyEmailController extends Controller
         // Auto login the user after verification
         Auth::login($request->user());
 
-        // Redirect to dashboard
-        return redirect()->route('dashboard')->with('status', 'Email verified!');
+        // Role-based redirect
+        $user = $request->user();
+
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard')->with('status', 'Email verified!');
+        } elseif ($user->role === 'patient') {
+            return redirect()->route('patient.dashboard')->with('status', 'Email verified!');
+        }
+
+        return redirect('/')->with('status', 'Email verified!'); // fallback
     }
 }

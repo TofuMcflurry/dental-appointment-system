@@ -47,10 +47,11 @@ class RegisteredUserController extends Controller
             'name' => $request->first_name . ' ' . $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'patient',
         ]);
 
         Patient::create([
-            'user_id'        => $user->user_id, // Now this has a value
+            'user_id'        => $user->user_id,
             'full_name'      => $request->first_name . ' ' . $request->last_name,
             'birthdate'      => $request->birthdate,
             'gender'         => $request->gender,
@@ -62,6 +63,6 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        return redirect()->route('login')->with('success', 'Registration successful! Please verify your email before logging in.');
+        return redirect()->route('login');
     }
 }

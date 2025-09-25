@@ -6,7 +6,7 @@
 
 <x-guest-layout>
 
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+    <div class="mb-4 text-sm text-black-600 dark:text-gray-400">
         {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
     </div>
 
@@ -14,7 +14,7 @@
         <form method="POST" action="{{ route('verification.send') }}">
             @csrf
             <div>
-                <x-primary-button >
+                <x-primary-button class="bg-blue-600 hover:bg-blue-700 text-white">
                     {{ __('Resend Verification Email') }}
                 </x-primary-button>
             </div>

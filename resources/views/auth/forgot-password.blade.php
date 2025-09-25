@@ -5,7 +5,7 @@
     <title>Forgot Password - LCAD DentalCare</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Link your custom CSS -->
+    @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>

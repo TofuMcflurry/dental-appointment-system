@@ -7,9 +7,28 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function dashboard()
     {
         return view('dashboard.dashboard'); 
-        // or 'dashboard.index' depende sa blade file mo
+    }
+
+    public function appointments()
+    {
+        return view('dashboard.appointments');
+    }
+
+    public function patients()
+    {
+        return view('dashboard.patients');
+    }
+
+    public function audittrail()
+    {
+        return view('dashboard.audittrail');
+    }
+
+    public function settings()
+    {
+        return view('dashboard.settings');
     }
 }
