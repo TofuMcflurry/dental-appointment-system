@@ -54,3 +54,7 @@
 
 </div>
 @endsection
+
+@section('scripts')
+    <script src="{{ asset('js/core.js') }}"></script>
+@endsection

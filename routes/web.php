@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Patient\PatientDashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -8,9 +9,11 @@ use Illuminate\Support\Facades\Route;
 // Root Route
 Route::get('/', function () {
     return auth()->check()
-        ? redirect()->route('dashboard') // generic redirect
+        ? redirect()->route('dashboard')
         : view('welcome');
 });
+
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 // GENERIC DASHBOARD ROUTE
 Route::get('/dashboard', function () {

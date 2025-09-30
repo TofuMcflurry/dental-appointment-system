@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login - LCAD DentalCare</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -21,7 +22,7 @@
             <div class="form login-form">
                 <h3>Welcome Back!</h3>
 
-                <form method="POST" action="{{ route('login') }}">
+                <form  id="loginForm" method="POST" action="{{ route('login') }}">
                     @csrf
 
                     <!-- Email -->
@@ -42,7 +43,10 @@
                     </label>
 
                     <!-- Submit -->
-                    <button type="submit">Login</button>
+                    <button type="submit" class="login-button" id="loginButton">
+                    <span class="button-text">Sign In</span>
+                        <div class="loading-spinner" id="loadingSpinner"><div class="spinner"></div></div>
+                    </button>
 
                     <!-- Forgot Password -->
                     @if (Route::has('password.request'))
@@ -65,5 +69,14 @@
     </div>
 </div>
 
+<!-- Success / Error message -->
+<div id="successMessage" class="hidden">Login successful!</div>
+<div id="errorMessage" class="hidden text-red-600"></div>
+
+    <script>
+        const csrfToken = "{{ csrf_token() }}";
+    </script>
+
+    <script src="{{ asset('js/login.js') }}"></script>
 </body>
 </html>
