@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <title>LCAD Dental Care — Admin</title>
 
   <!-- Google font -->
@@ -56,11 +57,11 @@
         <h2>LCAD Dental Care</h2>
       </div>
       <nav class="nav">
-        <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
-        <a href="{{ route('admin.appointments') }}" class="{{ request()->routeIs('admin.appointments') ? 'active' : '' }}">Appointments</a>
-        <a href="{{ route('admin.patients') }}" class="{{ request()->routeIs('admin.patients') ? 'active' : '' }}">Patients</a>
-        <a href="{{ route('admin.audittrail') }}" class="{{ request()->routeIs('admin.audittrail') ? 'active' : '' }}">Audit Trail</a>
-        <a href="{{ route('admin.settings') }}" class="{{ request()->routeIs('admin.settings') ? 'active' : '' }}">Settings</a>
+        <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="{{ route('admin.appointments') }}" class="{{ request()->routeIs('admin.appointments') ? 'active' : '' }}"><i class="fa-solid fa-calendar-check"></i> Appointments</a>
+        <a href="{{ route('admin.patients') }}" class="{{ request()->routeIs('admin.patients') ? 'active' : '' }}"><i class="fa-solid fa-users"></i> Patients</a>
+        <a href="{{ route('admin.audittrail') }}" class="{{ request()->routeIs('admin.audittrail') ? 'active' : '' }}"><i class="fa-solid fa-clipboard-list"></i> Audit Trail</a>
+        <a href="{{ route('admin.settings') }}" class="{{ request()->routeIs('admin.settings') ? 'active' : '' }}"><i class="fa-solid fa-gear"></i> Settings</a>
       </nav>
     </aside>
 

@@ -1,136 +1,100 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const settingsPage = document.querySelector(".settings-page");
-  if (!settingsPage) return; // Exit if not on settings page
+import { DataStore, fmtDate, escapeHtml, Page } from './base.js';
+import { DashboardPage } from './dashboard.js';
+import { AppointmentsPage } from './appointments.js';
+import { NotificationPage } from './notification.js';
 
-  // Elements
-  const darkModeCheckbox = settingsPage.querySelector("#darkMode");
-  const saveBtn = settingsPage.querySelector("#saveBtn");
-  const cancelBtn = settingsPage.querySelector("#cancelBtn");
-  const togglePassword = settingsPage.querySelector("#togglePassword");
-  const passwordInput = settingsPage.querySelector("#password");
-  const languageSelect = settingsPage.querySelector("#language");
-
-  // Dark mode toggle
-  function applyDarkMode(state) {
-    document.body.classList.toggle("dark", !!state);
-    if (darkModeCheckbox) darkModeCheckbox.checked = !!state;
-  }
-  if (darkModeCheckbox) {
-    darkModeCheckbox.addEventListener("change", () => {
-      applyDarkMode(darkModeCheckbox.checked);
-      localStorage.setItem("darkMode", darkModeCheckbox.checked ? "true" : "false");
-    });
-  }
-
-  // Show/Hide password
-  if (togglePassword && passwordInput) {
-    togglePassword.addEventListener("click", () => {
-      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-      passwordInput.setAttribute("type", type);
-      togglePassword.textContent = type === "password" ? "Show" : "Hide";
-    });
-  }
-
-  // Language translations
-  const translations = {
-    en: {
-      profile_settings: "Profile Settings",
-      name: "Name",
-      email: "Email",
-      phone: "Phone",
-      security: "Security",
-      password: "Password",
-      show: "Show",
-      hide: "Hide",
-      preferences: "Preferences",
-      enable_email: "Enable Email Notification",
-      dark_mode: "Dark Mode",
-      language: "Language",
-      save: "Save Changes",
-      cancel: "Cancel"
-    },
-    fil: {
-      profile_settings: "Mga Setting ng Profile",
-      name: "Pangalan",
-      email: "Email",
-      phone: "Telepono",
-      security: "Seguridad",
-      password: "Password",
-      show: "Ipakita",
-      hide: "Itago",
-      preferences: "Mga Kagustuhan",
-      enable_email: "Paganahin ang Abiso sa Email",
-      dark_mode: "Madilim na Mode",
-      language: "Wika",
-      save: "I-save ang Pagbabago",
-      cancel: "Kanselahin"
+class SettingsPage extends Page {
+  render() {
+    if (!this.container) {
+      console.warn(`SettingsPage: container not found for id "${this.id}"`);
+      return;
     }
-  };
 
-  function setLanguage(lang) {
-    settingsPage.querySelectorAll("[data-i18n]").forEach(el => {
-      const key = el.getAttribute("data-i18n");
-      if (translations[lang] && translations[lang][key]) {
-        el.textContent = translations[lang][key];
+    const data = DataStore.load() || {};
+    const name = localStorage.getItem('patientName') || '';
+    const dm = localStorage.getItem('darkMode') === 'true';
+
+    this.container.innerHTML = `
+      <h3 id="settingsTitle">Profile Settings</h3>
+      <div class="form-group"><label id="lblName">Name</label><input type="text" id="name" placeholder="Enter your name" value="${escapeHtml(name)}"></div>
+      <div class="form-group"><label id="lblEmail">Email</label><input type="email" id="email" placeholder="Enter your email" value="${escapeHtml(data.email || '')}"></div>
+      <div class="form-group"><label id="lblPhone">Phone</label><input type="tel" id="phone" placeholder="Enter your phone" value="${escapeHtml(data.phone || '')}"></div>
+
+      <h3 id="securityTitle">Security</h3>
+      <div class="form-group">
+        <label id="lblPassword">Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" placeholder="Enter new password">
+          <button type="button" class="show-pass" id="togglePassword">Show</button>
+        </div>
+      </div>
+
+      <h3 id="prefTitle">Preferences</h3>
+      <div class="checkbox-group"><input type="checkbox" id="emailNotif" ${data.emailNotif ? 'checked' : ''}><label for="emailNotif" id="lblEmailNotif">Enable Email Notification</label></div>
+      <div class="checkbox-group"><input type="checkbox" id="darkMode" ${dm ? 'checked' : ''}><label for="darkMode" id="lblDarkMode">Dark Mode</label></div>
+
+      <h3 id="langTitle">Language</h3>
+      <div class="form-group">
+        <select id="language">
+          <option value="en">English</option>
+          <option value="fil">Filipino</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="btn save" id="saveBtn">Save Changes</button>
+        <button class="btn cancel" id="cancelBtnSettings">Cancel</button>
+      </div>
+    `;
+
+    this._wireControls();
+  }
+
+  _wireControls() {
+    if (!this.container) return;
+
+    const langSelect = this.container.querySelector('#language');
+    if (langSelect) langSelect.value = localStorage.getItem('language') || 'en';
+
+    this.container.querySelector('#togglePassword')?.addEventListener('click', () => {
+      const pw = this.container.querySelector('#password');
+      const btn = this.container.querySelector('#togglePassword');
+      if (pw && btn) {
+        const t = pw.type === 'password' ? 'text' : 'password';
+        pw.type = t;
+        btn.textContent = t === 'password' ? 'Show' : 'Hide';
       }
     });
-    localStorage.setItem("language", lang);
-  }
 
-  if (languageSelect) {
-    languageSelect.addEventListener("change", function() {
-      setLanguage(this.value);
+    this.container.querySelector('#darkMode')?.addEventListener('change', (e) => {
+      const v = e.target.checked;
+      localStorage.setItem('darkMode', v ? 'true' : 'false');
+      document.body.classList.toggle('dark', v);
     });
-  }
 
-  // Save / Cancel
-  function loadSettings() {
-    if (settingsPage.querySelector("#name")) 
-      settingsPage.querySelector("#name").value = localStorage.getItem("name") || "";
-    if (settingsPage.querySelector("#email")) 
-      settingsPage.querySelector("#email").value = localStorage.getItem("email") || "";
-    if (settingsPage.querySelector("#phone")) 
-      settingsPage.querySelector("#phone").value = localStorage.getItem("phone") || "";
-    if (passwordInput) 
-      passwordInput.value = localStorage.getItem("password") || "";
-    if (settingsPage.querySelector("#emailNotif")) 
-      settingsPage.querySelector("#emailNotif").checked = localStorage.getItem("emailNotif") === "true";
+    this.container.querySelector('#saveBtn')?.addEventListener('click', () => {
+      const d = DataStore.load() || {};
+      d.email = this.container.querySelector('#email')?.value || '';
+      d.phone = this.container.querySelector('#phone')?.value || '';
+      d.emailNotif = this.container.querySelector('#emailNotif')?.checked || false;
+      DataStore.save(d);
 
-    const savedLang = localStorage.getItem("language") || "en";
-    if (languageSelect) languageSelect.value = savedLang;
-    setLanguage(savedLang);
+      const nameField = this.container.querySelector('#name')?.value.trim();
+      if (nameField) localStorage.setItem('patientName', nameField);
 
-    const savedDark = localStorage.getItem("darkMode") === "true";
-    applyDarkMode(savedDark);
-  }
+      const lang = this.container.querySelector('#language')?.value || 'en';
+      localStorage.setItem('language', lang);
 
-  if (saveBtn) {
-    saveBtn.addEventListener("click", () => {
-      if (settingsPage.querySelector("#name")) 
-        localStorage.setItem("name", settingsPage.querySelector("#name").value);
-      if (settingsPage.querySelector("#email")) 
-        localStorage.setItem("email", settingsPage.querySelector("#email").value);
-      if (settingsPage.querySelector("#phone")) 
-        localStorage.setItem("phone", settingsPage.querySelector("#phone").value);
-      if (passwordInput) 
-        localStorage.setItem("password", passwordInput.value);
-      if (settingsPage.querySelector("#emailNotif")) 
-        localStorage.setItem("emailNotif", settingsPage.querySelector("#emailNotif").checked ? "true" : "false");
-      if (languageSelect) 
-        localStorage.setItem("language", languageSelect.value);
-      if (darkModeCheckbox) 
-        localStorage.setItem("darkMode", darkModeCheckbox.checked ? "true" : "false");
-      alert("✅ Settings saved");
+      const dmVal = this.container.querySelector('#darkMode')?.checked || false;
+      localStorage.setItem('darkMode', dmVal ? 'true' : 'false');
+      document.body.classList.toggle('dark', dmVal);
+
+      this.app.checkLoginUI?.();
+      alert('✅ Settings saved (demo)');
     });
-  }
 
-  if (cancelBtn) {
-    cancelBtn.addEventListener("click", () => {
-      loadSettings();
-      alert("✖ Changes reverted");
-    });
+    this.container.querySelector('#cancelBtnSettings')?.addEventListener('click', () => this.render());
   }
+}
 
-  // Init on page load
-  loadSettings();
-});
+export { SettingsPage };
