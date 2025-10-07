@@ -9,7 +9,7 @@ class DashboardPage extends Page {
       return;
     }
 
-    const data = DataStore.load() || {
+    const data = window.patientData || DataStore.load() || {
       appointments: [],
       notifications: [],
       bracesColor: 'BLACK'
@@ -76,7 +76,9 @@ class DashboardPage extends Page {
       this.app.pages.notifications.render();
     }
 
-    this.container.querySelector('#simulateReminder')?.addEventListener('click', () => this.app.simulateReminder());
+    this.container.querySelector('#simulateReminder')?.addEventListener('click', () => {
+    this.app.simulateReminder();
+    });
     this.container.querySelector('#clearRead')?.addEventListener('click', () => this.app.clearReadNotifications());
   }
 

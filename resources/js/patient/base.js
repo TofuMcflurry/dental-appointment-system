@@ -68,8 +68,10 @@ class Page {
   }
   show() {
     document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    this.container.style.display = 'block';
-    document.getElementById('page-title').textContent = this.title;
+    if (this.container) this.container.style.display = 'block';
+
+    const titleEl = document.getElementById('page-title');
+    if (titleEl) titleEl.textContent = this.title;
   }
   render() {}
 }

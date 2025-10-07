@@ -1,5 +1,3 @@
-// core.js — App orchestration
-
 import { DashboardPage } from './dashboard.js';
 import { AppointmentsPage } from './appointments.js';
 import { NotificationPage } from './notification.js';
@@ -9,16 +7,28 @@ class App {
   constructor() {
     console.log("✅ Core.js (App) connected!");
 
+    // Initialize all pages (pass container ID, title, and reference to this app)
     this.pages = {
-      dashboard: new DashboardPage('dashboard', 'Dashboard', this),
-      appointments: new AppointmentsPage('appointments', 'Appointments', this),
-      notifications: new NotificationPage('notifications', 'Notifications', this),
-      settings: new SettingsPage('settings', 'Settings', this)
+      dashboard: new DashboardPage('dashboardPage', 'Dashboard', this),
+      appointments: new AppointmentsPage('appointmentsPage', 'Appointments', this),
+      notifications: new NotificationPage('notificationsPage', 'Notifications', this),
+      settings: new SettingsPage('settingsPage', 'Settings', this)
     };
 
-    this.pages.dashboard.show();
-    this.pages.dashboard.render();
+    // --- Determine which page exists in the current DOM ---
+    const currentPageId = document.getElementById('dashboardPage') ? 'dashboard' :
+                          document.getElementById('appointmentsPage') ? 'appointments' :
+                          document.getElementById('notificationsPage') ? 'notifications' :
+                          document.getElementById('settingsPage') ? 'settings' : null;
 
+    if(currentPageId && this.pages[currentPageId]) {
+        this.pages[currentPageId].show();
+        this.pages[currentPageId].render();
+    } else {
+        console.warn('No recognized page container found in this Blade.');
+    }
+
+    // --- Page navigation ---
     document.querySelectorAll('[data-page]').forEach(el => {
       el.addEventListener('click', () => {
         const target = el.dataset.page;
@@ -31,4 +41,8 @@ class App {
   }
 }
 
+// Export App for use in Blade (if needed)
 export { App };
+
+// Initialize app after DOM is ready
+window.addEventListener('DOMContentLoaded', () => new App());
