@@ -12,7 +12,6 @@
     <!-- Shared CSS & JS -->
     @vite([
         'resources/css/patient/patient.css',
-        'resources/js/patient/core.js',
         'resources/js/patient/dashboard.js',
         'resources/js/patient/appointments.js',
         'resources/js/patient/notification.js',
@@ -21,7 +20,6 @@
 </head>
 <body>
   <h2 id="page-title" style="display:none"></h2>
-  
   <div class="app">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -65,15 +63,7 @@
   </div>
 
   <!-- ✅ Global JS so every page works -->
-  <script>
-      // Provide patient data globally (safe default)
-      window.patientData = @json($patientData ?? []);
-  </script>
-  <script type="module">
-      import { App } from '/resources/js/patient/core.js';
-      window.addEventListener('DOMContentLoaded', () => new App());
-  </script>
-
+  @vite('resources/js/patient/core.js')
   @stack('scripts')
 </body>
 </html>

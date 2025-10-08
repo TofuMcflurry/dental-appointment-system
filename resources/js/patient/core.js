@@ -43,6 +43,5 @@ class App {
 
 // Export App for use in Blade (if needed)
 export { App };
-
 // Initialize app after DOM is ready
 window.addEventListener('DOMContentLoaded', () => new App());

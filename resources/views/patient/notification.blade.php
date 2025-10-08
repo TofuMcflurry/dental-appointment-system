@@ -11,5 +11,5 @@
 @endsection
 
 @push('scripts')
-<script type="module" src="{{ asset('js/patient/core.js') }}"></script>
+@vite('resources/js/patient/core.js')
 @endpush

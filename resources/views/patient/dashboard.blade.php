@@ -15,5 +15,5 @@
     <script>
         window.patientData = @json($patientData ?? []);
     </script>
-    <script type="module" src="{{ asset('js/patient/core.js') }}"></script>
+    @vite('resources/js/patient/core.js')
 @endsection
