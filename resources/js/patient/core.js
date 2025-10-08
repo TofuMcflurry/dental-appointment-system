@@ -44,4 +44,15 @@ class App {
 // Export App for use in Blade (if needed)
 export { App };
 // Initialize app after DOM is ready
-window.addEventListener('DOMContentLoaded', () => new App());
+window.addEventListener('DOMContentLoaded', () => {
+  const dashboardEl = document.getElementById('dashboardPage');
+  const appointmentsEl = document.getElementById('appointmentsPage');
+  const notificationsEl = document.getElementById('notificationsPage');
+  const settingsEl = document.getElementById('settingsPage');
+
+  if (dashboardEl || appointmentsEl || notificationsEl || settingsEl) {
+    new App();
+  } else {
+    console.warn("No page container found — App not initialized.");
+  }
+});

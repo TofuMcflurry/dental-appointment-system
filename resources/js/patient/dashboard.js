@@ -1,99 +1,78 @@
-// dashboard.js
+import { DataStore, fmtDate, isSameDay, escapeHtml } from './base.js';
 
-import { Page, DataStore, fmtDate, isSameDay, escapeHtml } from './base.js';
-
-class DashboardPage extends Page {
-  render() {
+class DashboardPage {
+  constructor(containerId = 'dashboardPage') {
+    this.container = document.getElementById(containerId);
     if (!this.container) {
-      console.warn(`DashboardPage: container not found for id "${this.id}"`);
+      console.warn(`DashboardPage: container not found for id "${containerId}"`);
       return;
     }
 
-    const data = window.patientData || DataStore.load() || {
+    // Load initial data
+    this.data = window.patientData || DataStore.load() || {
       appointments: [],
       notifications: [],
       bracesColor: 'BLACK'
     };
 
+    this.render();
+  }
+
+  show() {
+    document.querySelectorAll('.page-transition').forEach(el => {
+      el.classList.remove('active');
+      el.style.display = 'none';
+    });
+
+    if (this.container) {
+      this.container.classList.add('page-transition');
+      this.container.style.display = 'block';
+      setTimeout(() => this.container.classList.add('active'), 10);
+    }
+  }
+
+  render() {
+    if (!this.container) return;
+
+    this._renderSummary();
+    this._renderAppointments();
+    this._renderBracesGrid();
+    this._renderNotifications();
+    this._setupEventListeners();
+  }
+
+  _renderSummary() {
     const now = new Date();
-    const next = data.appointments
+    const next = this.data.appointments
       .filter(a => !a.cancelled && new Date(a.datetime) > now)
       .sort((a, b) => new Date(a.datetime) - new Date(b.datetime))[0];
 
-    const remindersToday = data.notifications
+    const remindersToday = this.data.notifications
       .filter(n => n.type === 'reminder' && isSameDay(n.datetime, now.toISOString()))
       .length;
 
-    this.container.innerHTML = `
-      <h3 id="dashTitle">Welcome to LCAD Dental Care</h3>
-      <p id="dashText" class="muted">This is your patient dashboard. Use the sidebar to manage appointments, view notifications, and update your settings.</p>
+    const nextEl = this.container.querySelector('#nextAppointment');
+    const statusEl = this.container.querySelector('#statusConfirmed');
+    const remindersEl = this.container.querySelector('#remindersToday');
 
-      <div class="overview" style="margin-top:16px">
-        <div class="card">
-          <h4>Next Appointment</h4>
-          <p id="nextAppointment" class="muted">${next ? `${escapeHtml(next.title)} — ${escapeHtml(fmtDate(next.datetime))}` : 'No upcoming appointment'}</p>
-        </div>
-        <div class="card">
-          <h4>Status</h4>
-          <p id="statusConfirmed" class="muted">${next ? (next.confirmed ? 'Confirmed' : 'Pending confirmation') : '—'}</p>
-        </div>
-        <div class="card">
-          <h4>Reminders Received Today</h4>
-          <p id="remindersToday" class="muted">${remindersToday}</p>
-        </div>
-      </div>
-
-      <div class="appointments-section">
-        <div class="card appointments-list">
-          <h4>Appointments</h4>
-          <div id="apptsContainer" style="margin-top:10px"></div>
-        </div>
-
-        <div class="card braces-section">
-          <h4>Braces Color</h4>
-          <div class="muted" style="font-size:13px">Click to choose preferred color</div>
-          <div class="braces-grid" id="bracesGrid"></div>
-          <div style="margin-top:12px;font-size:13px" class="muted">Selected: <span id="selectedColorText">${escapeHtml(data.bracesColor || '—')}</span></div>
-        </div>
-      </div>
-
-      <div class="card notifications-list">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <h4 style="margin:0">Notifications</h4>
-          <div class="top-controls">
-            <button id="simulateReminder" class="simulate-admin" title="Simulate admin sending a reminder">Admin: Send Reminder</button>
-            <button id="clearRead" class="btn cancel" style="padding:6px 10px">Clear Read</button>
-          </div>
-        </div>
-        <div id="notifsContainer" class="notifsContainer"></div>
-      </div>
-    `;
-
-    this._renderAppointmentsList(data);
-    this._renderBracesGrid(data);
-
-    if (this.app?.pages?.notifications?.render) {
-      this.app.pages.notifications.render();
-    }
-
-    this.container.querySelector('#simulateReminder')?.addEventListener('click', () => {
-    this.app.simulateReminder();
-    });
-    this.container.querySelector('#clearRead')?.addEventListener('click', () => this.app.clearReadNotifications());
+    if (nextEl) nextEl.textContent = next ? `${escapeHtml(next.title)} — ${escapeHtml(fmtDate(next.datetime))}` : 'No upcoming appointment';
+    if (statusEl) statusEl.textContent = next ? (next.confirmed ? 'Confirmed' : 'Pending confirmation') : '—';
+    if (remindersEl) remindersEl.textContent = remindersToday;
   }
 
-  _renderAppointmentsList(data) {
+  _renderAppointments() {
     const apptsContainer = this.container.querySelector('#apptsContainer');
     if (!apptsContainer) return;
 
     apptsContainer.innerHTML = '';
-    if (!data.appointments?.length) {
+
+    if (!this.data.appointments?.length) {
       apptsContainer.innerHTML = '<div class="muted">No appointments</div>';
       return;
     }
 
     const now = new Date();
-    const sorted = [...data.appointments].sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+    const sorted = [...this.data.appointments].sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
     sorted.forEach(a => {
       let statusClass = 'status-upcoming';
@@ -105,12 +84,7 @@ class DashboardPage extends Page {
       } else if (new Date(a.datetime) < now && !a.attended) {
         statusClass = 'status-missed';
         statusText = 'Missed';
-      } else if (new Date(a.datetime) > now) {
-        statusClass = 'status-upcoming';
-        statusText = 'Upcoming';
-      }
-
-      if (a.confirmed && !a.cancelled) {
+      } else if (a.confirmed && !a.cancelled) {
         statusText = 'Upcoming (Confirmed)';
       }
 
@@ -129,9 +103,10 @@ class DashboardPage extends Page {
     });
   }
 
-  _renderBracesGrid(data) {
+  _renderBracesGrid() {
     const bracesGrid = this.container.querySelector('#bracesGrid');
-    if (!bracesGrid) return;
+    const selectedText = this.container.querySelector('#selectedColorText');
+    if (!bracesGrid || !selectedText) return;
 
     const colors = ['BLACK', 'GRAY', 'ORANGE', 'RED', 'VIOLET', 'INDIGO', 'BLUE', 'CYAN', 'TEAL', 'GREEN', 'YELLOW', 'PINK', 'WHITE', 'MAROON', 'BROWN'];
     bracesGrid.innerHTML = '';
@@ -140,18 +115,54 @@ class DashboardPage extends Page {
       const box = document.createElement('div');
       box.className = 'color-box';
       box.style.background = c.toLowerCase() === 'white' ? '#ffffff' : c;
-      if (c.toLowerCase() === (data.bracesColor || '').toLowerCase()) box.classList.add('selected');
+      if (c.toLowerCase() === (this.data.bracesColor || '').toLowerCase()) box.classList.add('selected');
       box.title = c;
       box.addEventListener('click', () => {
-        data.bracesColor = c;
-        DataStore.save(data);
+        this.data.bracesColor = c;
+        DataStore.save(this.data);
         this.render();
       });
       bracesGrid.appendChild(box);
     });
 
-    const selectedText = this.container.querySelector('#selectedColorText');
-    if (selectedText) selectedText.textContent = data.bracesColor || '—';
+    selectedText.textContent = this.data.bracesColor || '—';
+  }
+
+  _renderNotifications() {
+    const notifsContainer = this.container.querySelector('#notifsContainer');
+    if (!notifsContainer) return;
+
+    notifsContainer.innerHTML = '';
+
+    if (!this.data.notifications?.length) {
+      notifsContainer.innerHTML = '<div class="muted">No notifications</div>';
+      return;
+    }
+
+    this.data.notifications.forEach(n => {
+      const notifDiv = document.createElement('div');
+      notifDiv.className = `notif ${n.read ? 'read' : 'unread'}`;
+      notifDiv.innerHTML = `<strong>${escapeHtml(n.title)}</strong> — <span>${fmtDate(n.datetime)}</span>`;
+      notifsContainer.appendChild(notifDiv);
+    });
+  }
+
+  _setupEventListeners() {
+    const simulateBtn = this.container.querySelector('#simulateReminder');
+    const clearBtn = this.container.querySelector('#clearRead');
+
+    simulateBtn?.addEventListener('click', () => this.simulateReminder());
+    clearBtn?.addEventListener('click', () => this.clearReadNotifications());
+  }
+
+  simulateReminder() {
+    alert('Simulate reminder clicked! (You can integrate real logic here)');
+  }
+
+  clearReadNotifications() {
+    this.data.notifications = this.data.notifications.map(n => ({ ...n, read: true }));
+    DataStore.save(this.data);
+    this._renderNotifications();
   }
 }
 

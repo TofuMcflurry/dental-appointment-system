@@ -1,51 +1,34 @@
-import { DataStore, fmtDate, escapeHtml, Page } from './base.js';
-import { DashboardPage } from './dashboard.js';
-import { AppointmentsPage } from './appointments.js';
-import { NotificationPage } from './notification.js';
+import { DataStore } from './base.js';
+import { Page } from './base.js';
 
 class SettingsPage extends Page {
   render() {
+    // Just verify container exists
     if (!this.container) {
       console.warn(`SettingsPage: container not found for id "${this.id}"`);
       return;
     }
 
+    // Load previously stored data and apply to form fields (if they exist)
     const data = DataStore.load() || {};
     const name = localStorage.getItem('patientName') || '';
     const dm = localStorage.getItem('darkMode') === 'true';
+    const lang = localStorage.getItem('language') || 'en';
 
-    this.container.innerHTML = `
-      <h3 id="settingsTitle">Profile Settings</h3>
-      <div class="form-group"><label id="lblName">Name</label><input type="text" id="name" placeholder="Enter your name" value="${escapeHtml(name)}"></div>
-      <div class="form-group"><label id="lblEmail">Email</label><input type="email" id="email" placeholder="Enter your email" value="${escapeHtml(data.email || '')}"></div>
-      <div class="form-group"><label id="lblPhone">Phone</label><input type="tel" id="phone" placeholder="Enter your phone" value="${escapeHtml(data.phone || '')}"></div>
+    // Apply values to existing inputs from Blade
+    const nameField = this.container.querySelector('#name');
+    const emailField = this.container.querySelector('#email');
+    const phoneField = this.container.querySelector('#phone');
+    const emailNotif = this.container.querySelector('#emailNotif');
+    const darkMode = this.container.querySelector('#darkMode');
+    const language = this.container.querySelector('#language');
 
-      <h3 id="securityTitle">Security</h3>
-      <div class="form-group">
-        <label id="lblPassword">Password</label>
-        <div class="password-wrapper">
-          <input type="password" id="password" placeholder="Enter new password">
-          <button type="button" class="show-pass" id="togglePassword">Show</button>
-        </div>
-      </div>
-
-      <h3 id="prefTitle">Preferences</h3>
-      <div class="checkbox-group"><input type="checkbox" id="emailNotif" ${data.emailNotif ? 'checked' : ''}><label for="emailNotif" id="lblEmailNotif">Enable Email Notification</label></div>
-      <div class="checkbox-group"><input type="checkbox" id="darkMode" ${dm ? 'checked' : ''}><label for="darkMode" id="lblDarkMode">Dark Mode</label></div>
-
-      <h3 id="langTitle">Language</h3>
-      <div class="form-group">
-        <select id="language">
-          <option value="en">English</option>
-          <option value="fil">Filipino</option>
-        </select>
-      </div>
-
-      <div class="actions">
-        <button class="btn save" id="saveBtn">Save Changes</button>
-        <button class="btn cancel" id="cancelBtnSettings">Cancel</button>
-      </div>
-    `;
+    if (nameField) nameField.value = name;
+    if (emailField) emailField.value = data.email || '';
+    if (phoneField) phoneField.value = data.phone || '';
+    if (emailNotif) emailNotif.checked = !!data.emailNotif;
+    if (darkMode) darkMode.checked = dm;
+    if (language) language.value = lang;
 
     this._wireControls();
   }
@@ -53,25 +36,26 @@ class SettingsPage extends Page {
   _wireControls() {
     if (!this.container) return;
 
-    const langSelect = this.container.querySelector('#language');
-    if (langSelect) langSelect.value = localStorage.getItem('language') || 'en';
+    const togglePw = this.container.querySelector('#togglePassword');
+    const pwField = this.container.querySelector('#password');
 
-    this.container.querySelector('#togglePassword')?.addEventListener('click', () => {
-      const pw = this.container.querySelector('#password');
-      const btn = this.container.querySelector('#togglePassword');
-      if (pw && btn) {
-        const t = pw.type === 'password' ? 'text' : 'password';
-        pw.type = t;
-        btn.textContent = t === 'password' ? 'Show' : 'Hide';
+    // Toggle password visibility
+    togglePw?.addEventListener('click', () => {
+      if (pwField) {
+        const isHidden = pwField.type === 'password';
+        pwField.type = isHidden ? 'text' : 'password';
+        togglePw.textContent = isHidden ? 'Hide' : 'Show';
       }
     });
 
+    // Toggle dark mode
     this.container.querySelector('#darkMode')?.addEventListener('change', (e) => {
       const v = e.target.checked;
       localStorage.setItem('darkMode', v ? 'true' : 'false');
       document.body.classList.toggle('dark', v);
     });
 
+    // Save button logic
     this.container.querySelector('#saveBtn')?.addEventListener('click', () => {
       const d = DataStore.load() || {};
       d.email = this.container.querySelector('#email')?.value || '';
@@ -79,8 +63,8 @@ class SettingsPage extends Page {
       d.emailNotif = this.container.querySelector('#emailNotif')?.checked || false;
       DataStore.save(d);
 
-      const nameField = this.container.querySelector('#name')?.value.trim();
-      if (nameField) localStorage.setItem('patientName', nameField);
+      const nameVal = this.container.querySelector('#name')?.value.trim();
+      if (nameVal) localStorage.setItem('patientName', nameVal);
 
       const lang = this.container.querySelector('#language')?.value || 'en';
       localStorage.setItem('language', lang);
@@ -90,9 +74,10 @@ class SettingsPage extends Page {
       document.body.classList.toggle('dark', dmVal);
 
       this.app.checkLoginUI?.();
-      alert('✅ Settings saved (demo)');
+      alert('✅ Settings saved (demo only)');
     });
 
+    // Cancel button reloads current values
     this.container.querySelector('#cancelBtnSettings')?.addEventListener('click', () => this.render());
   }
 }
