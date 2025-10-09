@@ -2,25 +2,18 @@ import { Page, DataStore, fmtDate } from './base.js';
 
 class AppointmentsPage extends Page {
   render() {
-    // Load existing data
     const data = DataStore.load() || { appointments: [] };
-
-    // Wire up controls once
     this._wireControls();
-
-    // Update UI based on stored data
     this._renderApptList();
     this._updateApptSummary();
   }
 
   show() {
-    // Hide all pages first
     document.querySelectorAll('.page-transition').forEach(el => {
       el.classList.remove('active');
       el.style.display = 'none';
     });
 
-    // Show appointment page
     if (this.container) {
       this.container.classList.add('page-transition');
       this.container.style.display = 'block';
@@ -28,9 +21,7 @@ class AppointmentsPage extends Page {
     }
 
     const titleEl = document.getElementById('page-title');
-    if (titleEl) {
-      titleEl.textContent = this.title || 'Appointments';
-    }
+    if (titleEl) titleEl.textContent = this.title || 'Appointments';
   }
 
   _wireControls() {
@@ -43,14 +34,12 @@ class AppointmentsPage extends Page {
     const cancelBtn = this.container.querySelector('#cancelApptBtn');
     const bookBtn = this.container.querySelector('#bookApptBtn');
 
-    // Update summary whenever form changes
     [apptDate, apptTime, nameInput, contactInput, genderSelect].forEach(el => {
       if (el) el.addEventListener('input', () => this._updateApptSummary());
     });
     if (servicesList)
       servicesList.addEventListener('change', () => this._updateApptSummary());
 
-    // Buttons
     if (cancelBtn) cancelBtn.addEventListener('click', () => this._clearApptForm());
     if (bookBtn) bookBtn.addEventListener('click', () => this._bookAppt());
   }
@@ -128,7 +117,8 @@ class AppointmentsPage extends Page {
       localStorage.setItem('patientName', patientName);
     }
 
-    alert('✅ Appointment booked (saved locally for demo).');
+    // Show confirmation modal instead of alert
+    this._showConfirmationModal(patientName, service, date, time);
 
     this._clearApptForm();
     this._renderApptList();
@@ -137,7 +127,7 @@ class AppointmentsPage extends Page {
   _renderApptList() {
     const data = DataStore.load() || { appointments: [] };
     const listEl = this.container.querySelector('#apptList');
-    if (!listEl) return; // Avoid error if #apptList doesn't exist
+    if (!listEl) return;
 
     listEl.innerHTML = '';
 
@@ -157,6 +147,30 @@ class AppointmentsPage extends Page {
         }${localName}`;
         listEl.appendChild(li);
       });
+  }
+
+  _showConfirmationModal(name, service, date, time) {
+    // Remove existing modal if any
+    const existing = document.querySelector('.confirm-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'confirm-modal';
+    modal.innerHTML = `
+      <div class="confirm-card">
+        <h3>Appointment Confirmed</h3>
+        <p><strong>${name}</strong>, your appointment for <strong>${service}</strong> has been successfully booked.</p>
+        <p><small>${date} at ${time}</small></p>
+        <button class="close-confirm">OK</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Add event listener for closing
+    modal.querySelector('.close-confirm').addEventListener('click', () => {
+      modal.classList.add('hide');
+      setTimeout(() => modal.remove(), 300);
+    });
   }
 }
 

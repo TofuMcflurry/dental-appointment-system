@@ -125,3 +125,64 @@ body.dark input,body.dark select,body.dark textarea{background:#334155;color:#ff
   .appt-form{grid-template-columns:1fr}
   .braces-grid{grid-template-columns:repeat(8,1fr)}
 }
+
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+.confirm-card {
+  background: #fff;
+  width: 350px;
+  max-width: 90%;
+  padding: 1.5rem;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  animation: popIn 0.3s ease;
+}
+
+.confirm-card h3 {
+  color: #007bff;
+  margin-bottom: 0.5rem;
+}
+
+.confirm-card p {
+  color: #444;
+  margin: 0.5rem 0;
+}
+
+.confirm-card button {
+  margin-top: 1rem;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.confirm-card button:hover {
+  background: #0056b3;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.confirm-modal.hide {
+  animation: fadeOut 0.3s ease forwards;
+}
+@keyframes fadeOut {
+  to { opacity: 0; }
+}
