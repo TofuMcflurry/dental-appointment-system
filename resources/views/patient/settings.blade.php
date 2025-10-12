@@ -1,4 +1,4 @@
-@extends('layouts.patient')
+@extends('layouts.app')
 
 @section('title', 'Settings')
 
