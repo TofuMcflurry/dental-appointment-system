@@ -1,0 +1,63 @@
+.appointments-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: 0 4px 12px rgba(0,0,0,.06);
+}
+
+.appointments-list .appt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 8px;
+  border-bottom: 1px solid #eee;
+}
+.appt .meta { display: flex; flex-direction: column; }
+.appt .time { font-size: 13px; color: var(--muted); }
+
+.status-pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12px;
+  color: #fff;
+}
+.status-upcoming { background: #10b981; }
+.status-missed { background: #ef4444; }
+.status-cancelled { background: #f59e0b; }
+
+/* Appointment Form */
+.appt-form { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.appt-summary {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background: #fafafa;
+}
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+.services-list {
+  height: 220px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+}
+.services-list label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}

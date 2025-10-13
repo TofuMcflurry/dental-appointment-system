@@ -1,0 +1,57 @@
+.overview {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.overview .card {
+  flex: 1;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid rgba(0,0,0,.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,.06);
+  transition: .2s;
+}
+.overview .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.1);
+}
+.overview h4 { margin: 0 0 6px; color: var(--accent); font-weight: 600; }
+.overview p { margin: 0; color: var(--muted); }
+
+/* Braces color picker */
+.braces-section {
+  padding: 16px;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.braces-grid {
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.color-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: #fafafa;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: .2s;
+}
+
+.color-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+.color-box.selected {
+  outline: 3px solid rgba(26,43,76,0.25);
+  transform: scale(1.08);
+}

@@ -1,0 +1,28 @@
+.notifications-list .notif {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+}
+.notif .left {
+  display: flex;
+  flex-direction: column;
+}
+.top-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+.simulate-admin {
+  background: #2563eb;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+}
