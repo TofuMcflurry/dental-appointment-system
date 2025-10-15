@@ -35,7 +35,7 @@ class DashboardPage {
     if (!this.container) return;
 
     this._renderSummary();
-    this._renderAppointments();
+    this._renderAppointments();   // Now renders appointments with full info & colors
     this._renderBracesGrid();
     this._renderNotifications();
     this._setupEventListeners();
@@ -64,6 +64,7 @@ class DashboardPage {
     const apptsContainer = this.container.querySelector('#apptsContainer');
     if (!apptsContainer) return;
 
+    // Keep card HTML, only clear child appointments
     apptsContainer.innerHTML = '';
 
     if (!this.data.appointments?.length) {
@@ -75,9 +76,9 @@ class DashboardPage {
     const sorted = [...this.data.appointments].sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
     sorted.forEach(a => {
-      let statusClass = 'status-upcoming';
+      // Determine status and color
+      let statusClass = 'status-upcoming'; // default green
       let statusText = 'Upcoming';
-
       if (a.cancelled) {
         statusClass = 'status-cancelled';
         statusText = 'Cancelled';
@@ -85,9 +86,11 @@ class DashboardPage {
         statusClass = 'status-missed';
         statusText = 'Missed';
       } else if (a.confirmed && !a.cancelled) {
+        statusClass = 'status-upcoming-confirmed';
         statusText = 'Upcoming (Confirmed)';
       }
 
+      // Create appointment div (matches your CSS)
       const apptDiv = document.createElement('div');
       apptDiv.className = 'appt';
       apptDiv.innerHTML = `

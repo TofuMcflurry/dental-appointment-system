@@ -27,7 +27,28 @@
     <div class="appointments-section">
         <div class="card appointments-list">
             <h4>Appointments</h4>
-            <div id="apptsContainer" style="margin-top:10px">Loading…</div>
+            @if($appointments && $appointments->count() > 0)
+                @foreach($appointments as $appt)
+                    @php
+                        $status = 'Upcoming';
+                        if($appt->cancelled) $status = 'Cancelled';
+                        elseif(!$appt->attended && \Carbon\Carbon::parse($appt->appointment_date) < now()) $status = 'Missed';
+                        elseif($appt->confirmed && !$appt->cancelled) $status = 'Upcoming (Confirmed)';
+                    @endphp
+
+                    <div class="appt">
+                        <div class="meta">
+                            <strong>{{ $appt->dental_service }}</strong>
+                            <span class="time">{{ \Carbon\Carbon::parse($appt->appointment_date)->format('M d, h:i A') }}</span>
+                        </div>
+                        <div class="status-container">
+                            <span class="status-pill status-{{ strtolower(str_replace(' ', '-', $status)) }}">{{ $status }}</span>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="muted">No appointments</div>
+            @endif
         </div>
 
         <div class="card braces-section">

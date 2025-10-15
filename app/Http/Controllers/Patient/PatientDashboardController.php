@@ -10,21 +10,17 @@ class PatientDashboardController extends Controller
 {
     public function dashboard()
     {
-        // Sample data for now — you can later fetch this from the database
-        $patientData = [
-            'appointments' => [
-                ['title' => 'Dental Cleaning', 'datetime' => '2025-10-15T09:00:00', 'confirmed' => true],
-                ['title' => 'Braces Adjustment', 'datetime' => '2025-10-25T13:30:00', 'confirmed' => false],
-            ],
-            'notifications' => [
-                ['message' => 'Your appointment is tomorrow at 9:00 AM.', 'date' => '2025-10-14'],
-                ['message' => 'New reminder from admin.', 'date' => '2025-10-06']
-            ],
-            'bracesColor' => 'BLUE'
-        ];
+        $appointments = Appointment::where('patient_id', auth()->id())
+            ->orderBy('appointment_date', 'asc')
+            ->get([
+                'appointment_id',    // primary key
+                'appointment_date',  // date/time of appointment
+                'notes',             // any notes
+                'dental_service',    // optional: dental service info
+                'status'             // optional: status of appointment
+            ]);
 
-        // Pass data to your Blade view
-        return view('patient.dashboard', compact('patientData'));
+        return view('patient.dashboard', compact('appointments'));
     }
 
     public function appointments()

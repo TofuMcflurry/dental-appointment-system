@@ -95,26 +95,6 @@
       <button type="reset" id="cancelApptBtn" class="btn cancel">Cancel</button>
     </div>
 
-    <hr style="margin:18px 0;">
-
-    {{-- Your Appointments List --}}
-    <h4 style="margin:0 0 8px 0">Your Appointments</h4>
-    <ul id="apptList" class="muted" style="padding-left:18px;">
-      @if(isset($appointments) && count($appointments) > 0)
-        @foreach ($appointments as $appointment)
-          <li>
-            {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('M d, h:i A') }}
-            - {{ $appointment->dental_service }}
-            <span style="color: {{ $appointment->status == 'Missed' ? 'red' : 'green' }}">
-              {{ ucfirst($appointment->status) }}
-            </span>
-          </li>
-        @endforeach
-      @else
-        <li>No appointments yet.</li>
-      @endif
-    </ul>
-
   </form>
 </div>
 
