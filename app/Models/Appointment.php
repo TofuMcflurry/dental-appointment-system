@@ -11,16 +11,14 @@ class Appointment extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'patient_name',
+        'contact_number',
+        'gender',
+        'dental_service',
         'patient_id',
         'doctor_id',
         'appointment_date',
         'status',
-        'patient_name',
-        'contact',
-        'date',
-        'time',
-        'gender',
-        'service',
         'notes',
     ];
 

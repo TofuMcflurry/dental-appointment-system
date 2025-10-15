@@ -41,7 +41,6 @@ Route::prefix('patient')->middleware(['auth', 'verified'])->name('patient.')->gr
     Route::get('/dashboard', [PatientDashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/appointments', [PatientDashboardController::class, 'appointments'])->name('appointments');
     Route::post('/appointments/store', [PatientDashboardController::class, 'storeAppointment'])->name('appointments.store');
-    Route::get('/appointments/all', [PatientDashboardController::class, 'getAppointments'])->name('appointments.all');
     Route::get('/notifications', [PatientDashboardController::class, 'notifications'])->name('notifications');
     Route::get('/settings', [PatientDashboardController::class, 'settings'])->name('settings');
 });

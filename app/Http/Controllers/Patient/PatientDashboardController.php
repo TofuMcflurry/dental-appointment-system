@@ -29,42 +29,51 @@ class PatientDashboardController extends Controller
 
     public function appointments()
     {
-        return view('patient.appointment');
+        // Fetch logged-in user's appointments
+        $appointments = Appointment::where('patient_id', auth()->id())
+            ->orderBy('appointment_date', 'asc')
+            ->get();
+
+        return view('patient.appointments', compact('appointments'));
     }
+
     public function storeAppointment(Request $request)
     {
-        $validated = $request->validate([
-            'patientName' => 'required|string|max:255',
-            'contact' => 'required|string|max:20',
-            'date' => 'required|date',
-            'time' => 'required',
+        $request->validate([
+            'patient_name' => 'required|string|max:255',
+            'contact_number' => 'required|string|max:20',
             'gender' => 'required|string',
-            'service' => 'required|string',
-            'notes' => 'nullable|string',
+            'dental_service' => 'required|string|max:255',
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required',
+            'patient_id' => 'required|integer',
+            'doctor_id' => 'required|integer',
         ]);
 
-        $appointment = Appointment::create([
-            'patient_name' => $validated['patientName'],
-            'contact' => $validated['contact'],
-            'date' => $validated['date'],
-            'time' => $validated['time'],
-            'gender' => $validated['gender'],
-            'service' => $validated['service'],
-            'notes' => $validated['notes'] ?? '',
+        // Combine date + time
+        $datetime = $request->appointment_date . ' ' . $request->appointment_time;
+
+        Appointment::create([
+            'patient_name' => $request->patient_name,
+            'contact_number' => $request->contact_number,
+            'gender' => $request->gender,
+            'dental_service' => $request->dental_service,
+            'patient_id' => $request->patient_id,
+            'doctor_id' => $request->doctor_id,
+            'appointment_date' => $datetime,
+            'status' => 'Pending',
+            'notes' => $request->notes,
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Appointment saved successfully!',
-            'data' => $appointment,
-        ], 201);
+        return redirect()->route('patient.appointments')
+                        ->with('success', 'Appointment booked successfully!');
     }
 
-    // Get all appointments
-    public function getAppointments()
-    {
-        $appointments = Appointment::orderBy('date', 'asc')->get();
-        return response()->json($appointments);
+// Get all appointments
+public function getAppointments()
+{
+    $appointments = Appointment::orderBy('appointment_date', 'asc')->get();
+    return response()->json($appointments);
     }
 
     public function notifications()
