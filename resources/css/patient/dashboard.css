@@ -1,57 +1,315 @@
+
+
+/* ===== Dashboard Page ===== */
+.dashboard-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+  background: hsl(var(--muted) / 0.3);
+  min-height: 100vh;
+}
+
+#dashTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin-bottom: 8px;
+}
+
+#dashText {
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
+}
+
+h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 0 0 12px 0;
+}
+
+.muted {
+  color: hsl(var(--muted-foreground));
+}
+
+/* ===== Card Component ===== */
+.card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Overview Section (Stats Cards) ===== */
 .overview {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
 .overview .card {
-  flex: 1;
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--card);
-  border: 1px solid rgba(0,0,0,.08);
-  box-shadow: 0 4px 12px rgba(0,0,0,.06);
-  transition: .2s;
+  padding: 20px;
 }
-.overview .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,.1);
-}
-.overview h4 { margin: 0 0 6px; color: var(--accent); font-weight: 600; }
-.overview p { margin: 0; color: var(--muted); }
 
-/* Braces color picker */
-.braces-section {
+.overview .card h4 {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.overview .card p {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+/* ===== Appointments Section ===== */
+.appointments-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.appointments-list {
+  min-height: 400px;
+}
+
+#apptsContainer {
+  max-height: 270px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Custom Scrollbar */
+#apptsContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+#apptsContainer::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+#apptsContainer::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 4px;
+}
+
+#apptsContainer::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+.appt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 16px;
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) - 2px);
+  margin-bottom: 12px;
+  transition: box-shadow 0.2s ease;
+}
+
+.appt:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.appt .meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.appt .meta strong {
+  font-size: 1rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.appt .meta .time {
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: calc(var(--radius) - 2px);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-upcoming {
+  background: hsl(var(--success) / 0.1);
+  color: hsl(var(--success));
+}
+
+.status-missed {
+  background: hsl(var(--destructive) / 0.1);
+  color: hsl(var(--destructive));
+}
+
+.status-cancelled {
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+}
+
+/* ===== Braces Section ===== */
+.braces-section {
+  display: flex;
+  flex-direction: column;
 }
 
 .braces-grid {
   display: grid;
-  grid-template-columns: repeat(5,1fr);
-  gap: 10px;
-  margin-top: 8px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .color-box {
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
-  border: 1px solid rgba(0,0,0,0.1);
-  background: #fafafa;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: calc(var(--radius) - 2px);
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  transition: .2s;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
 }
 
 .color-box:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  transform: scale(1.1);
+  border-color: hsl(var(--primary));
 }
+
 .color-box.selected {
-  outline: 3px solid rgba(26,43,76,0.25);
-  transform: scale(1.08);
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--primary));
+}
+
+/* ===== Notifications Section ===== */
+.notifications-list {
+  margin-bottom: 24px;
+}
+
+.top-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.notifsContainer {
+  margin-top: 12px;
+}
+
+.notif {
+  padding: 12px 16px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) - 2px);
+  margin-bottom: 8px;
+  transition: background 0.2s ease;
+}
+
+.notif.unread {
+  background: hsl(var(--accent));
+  border-left: 3px solid hsl(var(--primary));
+}
+
+.notif.read {
+  opacity: 0.7;
+}
+
+.notif strong {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+
+.notif span {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.875rem;
+}
+
+/* ===== Button Styles ===== */
+.btn {
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn.cancel {
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+}
+
+.btn.cancel:hover {
+  background: hsl(var(--accent));
+}
+
+.simulate-admin {
+  padding: 6px 10px;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.simulate-admin:hover {
+  opacity: 0.9;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+  .appointments-section {
+    grid-template-columns: 1fr;
+  }
+
+  .braces-grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: 16px;
+  }
+
+  .overview {
+    grid-template-columns: 1fr;
+  }
+
+  .braces-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .top-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .top-controls button {
+    width: 100%;
+  }
 }

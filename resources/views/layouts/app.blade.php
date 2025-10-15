@@ -33,7 +33,7 @@
       'resources/css/patient/appointments.css',
       'resources/js/patient/appointments.js',
       'resources/css/patient/notification.css',
-      'resources/js/patient/notifications.js',
+      'resources/js/patient/notification.js',
       'resources/css/patient/settings.css',
       'resources/js/patient/settings.js'
     ])
