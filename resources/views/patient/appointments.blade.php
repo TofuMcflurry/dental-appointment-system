@@ -98,6 +98,9 @@
   </form>
 </div>
 
+<!-- ADD THIS LINE TO INCLUDE THE CONFIRMATION MODAL -->
+@include('components.appointment-confirmation')
+
 @endsection
 
 @push('scripts')
