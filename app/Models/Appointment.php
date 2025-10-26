@@ -8,7 +8,7 @@ class Appointment extends Model
 {
     protected $table = 'appointments';
     protected $primaryKey = 'appointment_id';
-    public $timestamps = false;
+    public $timestamps = false;  // Set to true if you add created_at/updated_at columns
 
     protected $fillable = [
         'patient_name',
@@ -16,24 +16,14 @@ class Appointment extends Model
         'gender',
         'dental_service',
         'patient_id',
-        'doctor_id',
         'appointment_date',
         'status',
-        'notes',
+        'notes'
     ];
 
+    // Relationships
     public function patient()
     {
-        return $this->belongsTo(Patient::class, 'patient_id', 'patient_id');
-    }
-
-    public function doctor()
-    {
-        return $this->belongsTo(Doctor::class, 'doctor_id', 'doctor_id');
-    }
-
-    public function reminders()
-    {
-        return $this->hasMany(Reminder::class, 'appointment_id', 'appointment_id');
+        return $this->belongsTo(User::class, 'patient_id');  // Ensure User model exists
     }
 }

@@ -2,10 +2,11 @@ import { DataStore, fmtDate, isSameDay, escapeHtml } from './base.js';
 
 class DashboardPage {
   constructor(containerId = 'dashboardPage') {
-    this.container = document.getElementById(containerId);
-    if (!this.container) {
-      console.warn(`DashboardPage: container not found for id "${containerId}"`);
-      return;
+    const container = document.getElementById("dashboardPage");
+    if (container) {
+      // Only run this code if the element exists
+      const dashboard = new DashboardPage(container);
+      dashboard.init();
     }
 
     // Load initial data
@@ -19,23 +20,26 @@ class DashboardPage {
   }
 
   show() {
+    if (!this.container) {
+      console.warn('DashboardPage: Cannot show - container not found');
+      return;
+    }
+
     document.querySelectorAll('.page-transition').forEach(el => {
       el.classList.remove('active');
       el.style.display = 'none';
     });
 
-    if (this.container) {
-      this.container.classList.add('page-transition');
-      this.container.style.display = 'block';
-      setTimeout(() => this.container.classList.add('active'), 10);
-    }
+    this.container.classList.add('page-transition');
+    this.container.style.display = 'block';
+    setTimeout(() => this.container.classList.add('active'), 10);
   }
 
   render() {
     if (!this.container) return;
 
     this._renderSummary();
-    this._renderAppointments();   // Now renders appointments with full info & colors
+    this._renderAppointments();
     this._renderBracesGrid();
     this._renderNotifications();
     this._setupEventListeners();
@@ -64,7 +68,6 @@ class DashboardPage {
     const apptsContainer = this.container.querySelector('#apptsContainer');
     if (!apptsContainer) return;
 
-    // Keep card HTML, only clear child appointments
     apptsContainer.innerHTML = '';
 
     if (!this.data.appointments?.length) {
@@ -76,8 +79,7 @@ class DashboardPage {
     const sorted = [...this.data.appointments].sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
     sorted.forEach(a => {
-      // Determine status and color
-      let statusClass = 'status-upcoming'; // default green
+      let statusClass = 'status-upcoming';
       let statusText = 'Upcoming';
       if (a.cancelled) {
         statusClass = 'status-cancelled';
@@ -90,7 +92,6 @@ class DashboardPage {
         statusText = 'Upcoming (Confirmed)';
       }
 
-      // Create appointment div (matches your CSS)
       const apptDiv = document.createElement('div');
       apptDiv.className = 'appt';
       apptDiv.innerHTML = `

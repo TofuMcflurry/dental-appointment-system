@@ -3,7 +3,7 @@
 @section('title', 'Patient Dashboard')
 
 @section('content')
-<div id="dashboardPage" class="dashboard-page">
+<div id="dashboardPage" class="page">
     <h3 id="dashTitle">Welcome to LCAD Dental Care</h3>
     <p id="dashText" class="muted">
         This is your patient dashboard. Use the sidebar to manage appointments, view notifications, and update your settings.

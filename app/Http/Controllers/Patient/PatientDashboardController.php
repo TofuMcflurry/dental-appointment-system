@@ -35,19 +35,21 @@ class PatientDashboardController extends Controller
 
     public function storeAppointment(Request $request)
     {
+        $request->merge(['patient_id' => auth()->id()]);
+
         $request->validate([
             'patient_name' => 'required|string|max:255',
             'contact_number' => 'required|string|max:20',
-            'gender' => 'required|string',
+            'gender' => 'required|in:Male,Female,Other',
             'dental_service' => 'required|string|max:255',
             'appointment_date' => 'required|date',
-            'appointment_time' => 'required',
+            'appointment_time' => 'required|date_format:H:i',
             'patient_id' => 'required|integer',
-            'doctor_id' => 'required|integer',
         ]);
 
-        // Combine date + time
         $datetime = $request->appointment_date . ' ' . $request->appointment_time;
+
+        // REMOVED the conflict check since we don't have doctor_id anymore
 
         Appointment::create([
             'patient_name' => $request->patient_name,
@@ -55,14 +57,12 @@ class PatientDashboardController extends Controller
             'gender' => $request->gender,
             'dental_service' => $request->dental_service,
             'patient_id' => $request->patient_id,
-            'doctor_id' => $request->doctor_id,
             'appointment_date' => $datetime,
             'status' => 'Pending',
             'notes' => $request->notes,
         ]);
 
-        return redirect()->route('patient.appointments')
-                        ->with('success', 'Appointment booked successfully!');
+        return redirect()->route('patient.appointments')->with('success', 'Appointment booked successfully!');
     }
 
 // Get all appointments
