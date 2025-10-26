@@ -145,7 +145,7 @@
 }
 
 .btn-primary {
-  background-color: #6da8ff;
+  background: var(--nav);
   color: white;
 }
 

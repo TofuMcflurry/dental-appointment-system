@@ -2,11 +2,10 @@ import { DataStore, fmtDate, isSameDay, escapeHtml } from './base.js';
 
 class DashboardPage {
   constructor(containerId = 'dashboardPage') {
-    const container = document.getElementById("dashboardPage");
-    if (container) {
-      // Only run this code if the element exists
-      const dashboard = new DashboardPage(container);
-      dashboard.init();
+    this.container = document.getElementById(containerId);
+    if (!this.container) {
+      console.warn(`DashboardPage: container not found for id "${containerId}"`);
+      return;
     }
 
     // Load initial data
@@ -171,3 +170,12 @@ class DashboardPage {
 }
 
 export { DashboardPage };
+
+// Safe initialization - only initialize if we're on the dashboard page
+document.addEventListener('DOMContentLoaded', function() {
+  const dashboardContainer = document.getElementById('dashboardPage');
+  if (dashboardContainer && !window.dashboardInitialized) {
+    window.dashboardInitialized = true;
+    const dashboardPage = new DashboardPage();
+  }
+});
