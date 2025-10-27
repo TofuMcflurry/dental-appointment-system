@@ -178,66 +178,267 @@ class AppointmentsPage extends Page {
   _onConfirmBooking(appointmentData, paymentMethod, modal) {
     console.log('Final confirmation with payment:', paymentMethod);
     
-    // Hide modal
+    // Hide confirmation modal
     modal.style.display = 'none';
     
-    // Submit the actual appointment
-    this._submitAppointment(appointmentData, paymentMethod);
+    // Show loading spinner
+    this._showLoadingSpinner();
+    
+    // Submit the actual appointment after 4 seconds
+    setTimeout(() => {
+        this._submitAppointment(appointmentData, paymentMethod);
+    }, 4000);
+  }
+  _showLoadingSpinner() {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) {
+        loadingOverlay.style.display = 'flex';
+        
+        // Add fade-in animation
+        setTimeout(() => {
+            loadingOverlay.style.opacity = '1';
+        }, 10);
+    }
+  }
+  _hideLoadingSpinner() {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) {
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => {
+            loadingOverlay.style.display = 'none';
+        }, 300);
+    }
   }
 
   async _submitAppointment(appointmentData, paymentMethod = 'cash') {
-    const formData = new FormData();
-    formData.append('patient_name', appointmentData.patientName);
-    formData.append('contact_number', appointmentData.contact);
-    formData.append('gender', appointmentData.gender);
-    formData.append('dental_service', appointmentData.service);
-    formData.append('appointment_date', appointmentData.date);
-    formData.append('appointment_time', appointmentData.time);
-    formData.append('notes', appointmentData.notes);
-    formData.append('payment_method', paymentMethod); // Add payment method
-    
-    const tokenEl = document.querySelector('input[name="_token"]');
-    if (tokenEl) formData.append('_token', tokenEl.value);
-
     try {
-      const response = await fetch('/patient/appointments', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
+        const formData = new FormData();
+        formData.append('patient_name', appointmentData.patientName);
+        formData.append('contact_number', appointmentData.contact);
+        formData.append('gender', appointmentData.gender);
+        formData.append('dental_service', appointmentData.service);
+        formData.append('appointment_date', appointmentData.date);
+        formData.append('appointment_time', appointmentData.time);
+        formData.append('notes', appointmentData.notes);
+        formData.append('payment_method', paymentMethod);
+        
+        const tokenEl = document.querySelector('input[name="_token"]');
+        if (tokenEl) formData.append('_token', tokenEl.value);
 
-      if (response.ok) {
-        // Show success message
-        this._showSuccessMessage(appointmentData);
-      } else {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const errorData = await response.json();
-          alert('Error: ' + (errorData.message || 'Unknown error'));
+        const response = await fetch('/patient/appointments', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            // Show success with actual reference number from server
+            this._showSuccessMessage({
+                ...appointmentData,
+                refNumber: result.refNumber || appointmentData.refNumber
+            });
         } else {
-          const errorText = await response.text();
-          console.error('Server returned HTML:', errorText);
-          alert('Server error. Check console for details.');
+            this._hideLoadingSpinner();
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                const errorData = await response.json();
+                alert('Error: ' + (errorData.message || 'Unknown error'));
+            } else {
+                alert('Appointment booked successfully! Please check your appointments list.');
+                this._clearApptForm();
+                window.location.href = '/patient/appointments';
+            }
         }
-      }
     } catch (err) {
-      console.error('Fetch error:', err);
-      alert('Network error. Please try again.');
+        this._hideLoadingSpinner();
+        console.error('Fetch error:', err);
+        alert('Network error. Please try again.');
     }
   }
 
   _showSuccessMessage(appointmentData) {
-    // You can show a success modal or redirect
-    alert(`Appointment booked successfully!\nReference: ${appointmentData.refNumber}`);
+    // Hide loading spinner first
+    this._hideLoadingSpinner();
     
-    // Clear form and redirect
-    this._clearApptForm();
-    setTimeout(() => {
-      window.location.href = '/patient/appointments';
-    }, 2000);
-  }
+    // Show beautiful success message
+    this._showSuccessModal(appointmentData);
+}
+
+    _showSuccessModal(appointmentData) {
+        // Remove existing success modal if any
+        const existing = document.querySelector('.success-modal');
+        if (existing) existing.remove();
+
+        const successModal = document.createElement('div');
+        successModal.className = 'success-modal';
+        successModal.innerHTML = `
+            <div class="success-card">
+                <div class="success-icon">
+                    <img src="/images/success-checkmark.svg.png" alt="Success" class="success-svg">
+                </div>
+                <h3>Appointment Booked Successfully!</h3>
+                <div class="success-details">
+                    <div class="detail-item">
+                        <span class="label">Reference Number:</span>
+                        <span class="value">${appointmentData.refNumber}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Service:</span>
+                        <span class="value">${appointmentData.service}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Date & Time:</span>
+                        <span class="value">${appointmentData.date} at ${appointmentData.time}</span>
+                    </div>
+                </div>
+                <p class="success-note">Please save your reference number for future reference.</p>
+                <button class="btn btn-primary" id="closeSuccessBtn">Continue</button>
+            </div>
+        `;
+        
+        document.body.appendChild(successModal);
+
+        // Add styles
+        this._addSuccessModalStyles();
+        
+        // Add event listener for closing
+        successModal.querySelector('#closeSuccessBtn').addEventListener('click', () => {
+            successModal.classList.add('fade-out');
+            setTimeout(() => {
+                successModal.remove();
+                // Clear form and redirect
+                this._clearApptForm();
+                window.location.href = '/patient/appointments';
+            }, 300);
+        });
+    }
+
+  _addSuccessModalStyles() {
+    if (document.getElementById('successModalStyles')) return;
+    
+    const styles = document.createElement('style');
+    styles.id = 'successModalStyles';
+    styles.textContent = `
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .success-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .success-icon {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .success-svg {
+            width: 60px;
+            height: 60px;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .success-card h3 {
+            color: #27ae60;
+            margin-bottom: 20px;
+            font-size: 22px;
+            text-align: center;
+        }
+        
+        .success-details {
+            text-align: left;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .label {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .value {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .success-note {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .btn-primary:hover {
+            background-color: #219653;
+        }
+        
+        .fade-out {
+            animation: fadeOut 0.3s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    `;
+    
+    document.head.appendChild(styles);
+}
 
   _calculateEndTime(startTime) {
     // Simple calculation - add 1 hour to start time

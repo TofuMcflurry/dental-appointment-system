@@ -48,6 +48,13 @@
   </div>
 </div>
 
+  <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+    <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Processing your appointment...</p>
+    </div>
+  </div>
+
 <style>
 .confirmation-modal {
   position: fixed;
@@ -161,6 +168,51 @@
 
 .btn-outline:hover {
   background-color: #f3f3f3;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid #e0e0e0;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #e3e3e3;
+    border-top: 4px solid #6da8ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+.loading-spinner p {
+    margin: 0;
+    color: #333;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 @media (max-width: 400px) {

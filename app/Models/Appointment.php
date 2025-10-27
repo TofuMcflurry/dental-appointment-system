@@ -18,8 +18,20 @@ class Appointment extends Model
         'patient_id',
         'appointment_date',
         'status',
-        'notes'
+        'notes',
+        'refNumber'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($appointment) {
+            if (empty($appointment->refNumber)) {
+                $appointment->refNumber = 'APPT' . date('YmdHis') . Str::random(4);
+            }
+        });
+    }
 
     // Relationships
     public function patient()

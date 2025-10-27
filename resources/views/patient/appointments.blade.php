@@ -29,11 +29,19 @@
         <div style="display:flex; gap:12px;">
           <div class="form-group" style="flex:1;">
             <label for="apptDate">Date</label>
-            <input type="date" id="apptDate" name="appointment_date" required>
+            <input type="date" id="apptDate" name="appointment_date" 
+                   min="{{ date('Y-m-d', strtotime('+1 day')) }}" 
+                   max="{{ date('Y-m-d', strtotime('+30 days')) }}" 
+                   required>
+            <small style="color: #666; font-size: 12px;">Appointments can be booked from tomorrow to 30 days ahead</small>
           </div>
           <div class="form-group" style="width:160px;">
             <label for="apptTime">Time</label>
-            <input type="time" id="apptTime" name="appointment_time" required>
+            <input type="time" id="apptTime" name="appointment_time" 
+                   min="07:00" 
+                   max="17:00" 
+                   required>
+            <small style="color: #666; font-size: 12px;">Clinic hours: 7:00 AM - 5:00 PM</small>
           </div>
         </div>
 
@@ -94,11 +102,11 @@
       <button type="submit" id="bookApptBtn" class="btn save">Book</button>
       <button type="reset" id="cancelApptBtn" class="btn cancel">Cancel</button>
     </div>
-
   </form>
 </div>
+{{-- This closes the main appointmentsPage div --}}
 
-<!-- ADD THIS LINE TO INCLUDE THE CONFIRMATION MODAL -->
+<!-- Include the confirmation modal -->
 @include('components.appointment-confirmation')
 
 @endsection

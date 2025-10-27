@@ -45,13 +45,24 @@ class PatientDashboardController extends Controller
             'appointment_date' => 'required|date',
             'appointment_time' => 'required|date_format:H:i',
             'patient_id' => 'required|integer',
+            'payment_method' => 'required|in:cash,card',
         ]);
 
         $datetime = $request->appointment_date . ' ' . $request->appointment_time;
 
-        // REMOVED the conflict check since we don't have doctor_id anymore
+        // Generate unique reference number using Option 1 format
+        $refNumber = $this->generateRefNumber();
 
-        Appointment::create([
+        // Check for conflicts (same patient, date/time)
+        $conflict = Appointment::where('patient_id', $request->patient_id)
+            ->where('appointment_date', $datetime)
+            ->exists();
+
+        if ($conflict) {
+            return back()->withErrors(['appointment_time' => 'You already have an appointment at this time.']);
+        }
+
+        $appointment = Appointment::create([
             'patient_name' => $request->patient_name,
             'contact_number' => $request->contact_number,
             'gender' => $request->gender,
@@ -60,16 +71,42 @@ class PatientDashboardController extends Controller
             'appointment_date' => $datetime,
             'status' => 'Pending',
             'notes' => $request->notes,
+            'payment_method' => $request->payment_method,
+            'refNumber' => $refNumber,
         ]);
 
-        return redirect()->route('patient.appointments')->with('success', 'Appointment booked successfully!');
+        // Return JSON response for AJAX requests
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Appointment booked successfully!',
+                'refNumber' => $refNumber,
+                'appointment' => $appointment
+            ]);
+        }
+
+        return redirect()->route('patient.appointments')->with([
+            'success' => 'Appointment booked successfully!',
+            'refNumber' => $refNumber
+        ]);
     }
 
-// Get all appointments
-public function getAppointments()
-{
-    $appointments = Appointment::orderBy('appointment_date', 'asc')->get();
-    return response()->json($appointments);
+    private function generateRefNumber()
+    {
+        do {
+            // Option 1 Format: APPT + YYMMDD + 4-digit random number
+            // Examples: APPT2510260001, APPT2510261234, APPT2510269999
+            $refNumber = 'APPT' . date('ymd') . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        } while (Appointment::where('refNumber', $refNumber)->exists());
+        
+        return $refNumber;
+    }
+
+    // Get all appointments
+    public function getAppointments()
+    {
+        $appointments = Appointment::orderBy('appointment_date', 'asc')->get();
+        return response()->json($appointments);
     }
 
     public function notifications()
