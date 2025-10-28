@@ -55,12 +55,12 @@ h4 {
 }
 
 .overview .card h4 {
+  font-weight: 700;
+  letter-spacing: 0.5px;
   font-size: 0.875rem;
-  font-weight: 500;
   color: hsl(var(--muted-foreground));
   margin-bottom: 8px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .overview .card p {

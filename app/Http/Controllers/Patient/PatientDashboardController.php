@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\BracesSchedule;
 use App\Models\Appointment; 
 
 class PatientDashboardController extends Controller
@@ -13,14 +14,32 @@ class PatientDashboardController extends Controller
         $appointments = Appointment::where('patient_id', auth()->id())
             ->orderBy('appointment_date', 'asc')
             ->get([
-                'appointment_id',    // primary key
-                'appointment_date',  // date/time of appointment
-                'notes',             // any notes
-                'dental_service',    // optional: dental service info
-                'status'             // optional: status of appointment
+                'appointment_id',
+                'appointment_date', 
+                'notes',
+                'dental_service',
+                'status'  // ✅ This is the correct column
             ]);
 
-        return view('patient.dashboard', compact('appointments'));
+        // Get next braces adjustment
+        $nextBracesAdjustment = BracesSchedule::where('patient_id', auth()->id())
+            ->where('is_active', 1)
+            ->orderBy('next_adjustment_date', 'asc')
+            ->first();
+
+        // Get today's received reminders
+        $todaysReminders = \App\Models\BracesReminder::where('patient_id', auth()->id())
+            ->where('sent', 1)
+            ->whereDate('sent_at', today())
+            ->get();
+
+        // ✅ FIXED: Use status column
+        $nextAppointment = $appointments->where('status', '!=', 'Cancelled')
+                                    ->where('appointment_date', '>=', now())
+                                    ->sortBy('appointment_date')
+                                    ->first();
+
+        return view('patient.dashboard', compact('appointments', 'nextBracesAdjustment', 'todaysReminders', 'nextAppointment'));
     }
 
     public function appointments()

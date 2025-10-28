@@ -2,6 +2,10 @@
 
 @section('title', 'Patient Dashboard')
 
+{{-- @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+@endpush --}}
+
 @section('content')
 <div id="dashboardPage" class="page">
     <h3 id="dashTitle">Welcome to LCAD Dental Care</h3>
@@ -10,17 +14,71 @@
     </p>
 
     <div class="overview" style="margin-top:16px">
+        @if($nextBracesAdjustment)
         <div class="card">
-            <h4>Next Appointment</h4>
-            <p id="nextAppointment" class="muted">Loading…</p>
+            <h4>Next Braces Adjustment</h4>
+            <p style="font-size: 1.3em; color: #1a4db3; font-weight: 700;">
+                {{ \Carbon\Carbon::parse($nextBracesAdjustment->next_adjustment_date)->format('F j, Y') }}
+            </p>
+            <small style="color: #5f6b7a;" class="muted">
+                Automatic reminders will be sent to your email
+            </small>
         </div>
+        @endif
         <div class="card">
             <h4>Status</h4>
-            <p id="statusConfirmed" class="muted">Loading…</p>
+            @if($nextAppointment)
+                @php
+                    // Map status to colors and friendly names
+                    $statusConfig = [
+                        'Pending' => ['class' => 'text-warning', 'text' => 'Pending Confirmation'],
+                        'Confirmed' => ['class' => 'text-success', 'text' => 'Confirmed'],
+                        'Upcoming' => ['class' => 'text-primary', 'text' => 'Upcoming'],
+                        'Completed' => ['class' => 'text-secondary', 'text' => 'Completed'],
+                        'Cancelled' => ['class' => 'text-danger', 'text' => 'Cancelled']
+                    ];
+                    
+                    $statusInfo = $statusConfig[$nextAppointment->status] ?? ['class' => 'text-primary', 'text' => $nextAppointment->status];
+                @endphp
+                
+                <p style="margin-bottom: 5px;">{{ $nextAppointment->dental_service }}</p>
+                <p class="muted" style="margin-bottom: 8px; font-size: 0.9em;">
+                    {{ \Carbon\Carbon::parse($nextAppointment->appointment_date)->format('M d, g:i A') }}
+                </p>
+                <p style="display: inline-block; background: #fff3cd; color: #856404; 
+                padding: 3px 10px; border-radius: 15px; font-weight: 600;">
+                    {{ $statusInfo['text'] }}
+                </p>
+            @else
+                <p class="muted">No upcoming appointments</p>
+            @endif
         </div>
         <div class="card">
             <h4>Reminders Received Today</h4>
-            <p id="remindersToday" class="muted">Loading…</p>
+            @if($todaysReminders->count() > 0)
+                <div style="font-size: 0.95em;">
+                    @foreach($todaysReminders as $reminder)
+                        <div style="margin-bottom: 8px; padding: 8px 12px; background: #ecfdf5; border-left: 4px solid #0d9488; border-radius: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>
+                                    @if($reminder->type == '7days_before')
+                                        <i class="fa-solid fa-envelope-circle-check text-success"></i> 7 days before adjustment
+                                    @elseif($reminder->type == '3days_before')
+                                        <i class="fa-solid fa-clock text-warning"></i> 3 days before adjustment
+                                    @elseif($reminder->type == 'day_of')
+                                        <i class="fa-solid fa-calendar-check text-primary"></i> Day of adjustment
+                                    @else
+                                        <i class="fa-solid fa-envelope text-muted"></i> {{ $reminder->type }}
+                                    @endif
+                                </span>
+                                <small class="muted">{{ \Carbon\Carbon::parse($reminder->sent_at)->format('g:i A') }}</small>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="muted">No reminders received today</p>
+            @endif
         </div>
     </div>
 
