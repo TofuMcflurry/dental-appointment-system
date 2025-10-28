@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Patient\PatientDashboardController;
+use App\Http\Controllers\Patient\NotificationsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,7 +42,13 @@ Route::prefix('patient')->middleware(['auth', 'verified'])->name('patient.')->gr
     Route::get('/dashboard', [PatientDashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/appointments', [PatientDashboardController::class, 'appointments'])->name('appointments');
     Route::post('/appointments', [PatientDashboardController::class, 'storeAppointment'])->name('appointments.store');
-    Route::get('/notifications', [PatientDashboardController::class, 'notifications'])->name('notifications');
+
+    Route::get('/notifications', [NotificationsController::class, 'index'])->name('notifications');
+    Route::post('/notifications/mark-all-read', [NotificationsController::class, 'markAllRead'])->name('notifications.mark-all-read');
+    Route::post('/notifications/delete-all', [NotificationsController::class, 'deleteAll'])->name('notifications.delete-all');
+    Route::post('/notifications/{id}/toggle-read', [NotificationsController::class, 'toggleRead'])->name('notifications.toggle-read');
+    Route::delete('/notifications/{id}', [NotificationsController::class, 'delete'])->name('notifications.delete');
+    
     Route::get('/settings', [PatientDashboardController::class, 'settings'])->name('settings');
 });
 
