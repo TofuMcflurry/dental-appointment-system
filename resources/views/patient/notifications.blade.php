@@ -157,3 +157,34 @@
   </div>
 </div>
 @endsection
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const filterUnreadBtn = document.getElementById('filterUnreadBtn');
+  
+  if (filterUnreadBtn) {
+    filterUnreadBtn.addEventListener('click', function() {
+      const active = this.dataset.active === '1';
+      this.dataset.active = active ? '0' : '1';
+      this.textContent = active ? 'Show Unread' : 'Show All';
+      
+      // Simple client-side filtering
+      const notifications = document.querySelectorAll('.notif');
+      notifications.forEach(notif => {
+        if (active) {
+          // Show all
+          notif.style.display = 'flex';
+        } else {
+          // Show only unread
+          if (notif.classList.contains('unread')) {
+            notif.style.display = 'flex';
+          } else {
+            notif.style.display = 'none';
+          }
+        }
+      });
+    });
+  }
+});
+</script>
+@endsection

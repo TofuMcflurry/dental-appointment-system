@@ -172,6 +172,7 @@ class DashboardPage {
 export { DashboardPage };
 
 // Safe initialization - only initialize if we're on the dashboard page
+/*
 document.addEventListener('DOMContentLoaded', function() {
   const dashboardContainer = document.getElementById('dashboardPage');
   if (dashboardContainer && !window.dashboardInitialized) {
@@ -179,3 +180,4 @@ document.addEventListener('DOMContentLoaded', function() {
     const dashboardPage = new DashboardPage();
   }
 });
+*/
