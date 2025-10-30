@@ -1,18 +1,25 @@
-import { DataStore } from './base.js';
+import { DataStore, DarkMode } from './base.js';
 import { Page } from './base.js';
 
 class SettingsPage extends Page {
+  constructor(containerId = 'settingsPage', title = 'Settings', app = null) {
+    super(containerId, title, app);
+    
+    if (this.container) {
+      this.render();
+    }
+  }
+
   render() {
-    // Just verify container exists
     if (!this.container) {
       console.warn(`SettingsPage: container not found for id "${this.id}"`);
       return;
     }
 
-    // Load previously stored data and apply to form fields (if they exist)
+    // Load previously stored data and apply to form fields
     const data = DataStore.load() || {};
     const name = localStorage.getItem('patientName') || '';
-    const dm = localStorage.getItem('darkMode') === 'true';
+    const dm = DarkMode.isEnabled();
     const lang = localStorage.getItem('language') || 'en';
 
     // Apply values to existing inputs from Blade
@@ -48,11 +55,11 @@ class SettingsPage extends Page {
       }
     });
 
-    // Toggle dark mode
+    // Dark mode toggle - GLOBAL
     this.container.querySelector('#darkMode')?.addEventListener('change', (e) => {
-      const v = e.target.checked;
-      localStorage.setItem('darkMode', v ? 'true' : 'false');
-      document.body.classList.toggle('dark', v);
+      const isDarkMode = e.target.checked;
+      localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
+      DarkMode.apply(); // This will apply globally
     });
 
     // Save button logic
@@ -69,12 +76,12 @@ class SettingsPage extends Page {
       const lang = this.container.querySelector('#language')?.value || 'en';
       localStorage.setItem('language', lang);
 
-      const dmVal = this.container.querySelector('#darkMode')?.checked || false;
-      localStorage.setItem('darkMode', dmVal ? 'true' : 'false');
-      document.body.classList.toggle('dark', dmVal);
+      const isDarkMode = this.container.querySelector('#darkMode')?.checked || false;
+      localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
+      DarkMode.apply(); // Apply dark mode globally
 
-      this.app.checkLoginUI?.();
-      alert('✅ Settings saved (demo only)');
+      this.app?.checkLoginUI?.();
+      alert('✅ Settings saved!');
     });
 
     // Cancel button reloads current values

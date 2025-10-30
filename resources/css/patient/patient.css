@@ -39,17 +39,28 @@ html, body {
   transition: all 0.3s ease;
 }
 
-/* Dark mode support */
-body.dark {
-  --bg: #0f172a;
-  --card: #1e293b;
-  --accent: #e2e8f0;
-  color: #f1f5f9;
+/* Dark mode styles */
+body.dark,
+body.dark .page-transition,
+body.dark .settings-page {
+  background-color: #1a1a1a;
+  color: #ffffff;
 }
 
-body.dark .content {
-  background: var(--card);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+body.dark .form-group input,
+body.dark .form-group select {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  border-color: #444;
+}
+
+body.dark .checkbox-group {
+  color: #ffffff;
+}
+
+/* Ensure dark mode works on all pages */
+html.dark-theme {
+  background: #1a1a1a;
 }
 
 /* Responsive layout */

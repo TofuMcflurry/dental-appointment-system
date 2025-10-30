@@ -43,6 +43,43 @@ class DataStore {
   }
 }
 
+/* Dark Mode Manager */
+class DarkMode {
+  static init() {
+    // Apply dark mode on page load
+    this.apply();
+    
+    // Listen for dark mode changes from other pages
+    window.addEventListener('darkModeChanged', () => {
+      this.apply();
+    });
+  }
+  
+  static apply() {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    document.body.classList.toggle('dark', isDarkMode);
+    document.documentElement.classList.toggle('dark-theme', isDarkMode);
+  }
+  
+  static toggle() {
+    const current = localStorage.getItem('darkMode') === 'true';
+    const newMode = !current;
+    localStorage.setItem('darkMode', newMode ? 'true' : 'false');
+    this.apply();
+    
+    // Notify other pages
+    window.dispatchEvent(new CustomEvent('darkModeChanged', { 
+      detail: { isDarkMode: newMode } 
+    }));
+    
+    return newMode;
+  }
+  
+  static isEnabled() {
+    return localStorage.getItem('darkMode') === 'true';
+  }
+}
+
 /* Utilities */
 function fmtDate(dISO) {
   const d = new Date(dISO);
@@ -76,4 +113,9 @@ class Page {
   render() {}
 }
 
-export { Page, DataStore, fmtDate, isSameDay, escapeHtml };
+// Initialize dark mode when base.js loads
+document.addEventListener('DOMContentLoaded', () => {
+  DarkMode.init();
+});
+
+export { Page, DataStore, DarkMode, fmtDate, isSameDay, escapeHtml };
