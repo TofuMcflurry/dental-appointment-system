@@ -32,6 +32,15 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    public function settings()
+    {
+        return $this->hasOne(UserSetting::class, 'user_id', 'user_id')
+                    ->withDefault([
+                        'language' => 'en',
+                        'dark_mode' => false
+                    ]);
+    }
+
     public function patient()
     {
         return $this->hasOne(Patient::class, 'user_id', 'user_id');

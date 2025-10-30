@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Patient\PatientDashboardController;
 use App\Http\Controllers\Patient\NotificationsController;
+use App\Http\Controllers\patient\PatientSettingsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,9 +50,16 @@ Route::prefix('patient')->middleware(['auth', 'verified'])->name('patient.')->gr
     Route::post('/notifications/{id}/toggle-read', [NotificationsController::class, 'toggleRead'])->name('notifications.toggle-read');
     Route::delete('/notifications/{id}', [NotificationsController::class, 'delete'])->name('notifications.delete');
     
-    Route::get('/settings', [PatientDashboardController::class, 'settings'])->name('settings');
+    Route::get('/settings', [PatientSettingsController::class, 'edit'])->name('settings');
+    Route::put('/settings', [PatientSettingsController::class, 'update'])->name('settings.update');
+    
+    // OTP Routes - INSIDE PATIENT GROUP
+    Route::get('/verify-otp', function() {
+        return view('auth.verify-otp');
+    })->name('verify.otp.page'); // ✅ GET route for the page
+    Route::post('/verify-otp', [PatientSettingsController::class, 'verifyOTP'])->name('verify.otp.submit'); // ✅ POST route for form submission
+    Route::post('/resend-otp', [PatientSettingsController::class, 'resendOTP'])->name('resend.otp');
 });
-
 // Profile Routes (requires authentication)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
