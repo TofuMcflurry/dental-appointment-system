@@ -23,3 +23,123 @@
     .header .title {font-size:18px;font-weight:600}
     .header .user {display:flex;align-items:center;gap:18px;font-weight:500}
     .header .logout {cursor:pointer;color:#fff;background:#59677f;padding:6px 14px;border-radius:6px;font-size:14px;border:none;}
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ✅ ADD THE ANIMATION KEYFRAMES */
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toast {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border-left: 4px solid #1A2B4C;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 300px;
+    /* ✅ REMOVE these - animation handles it now */
+    /* transform: translateX(400px); */
+    /* opacity: 0; */
+    /* transition: all 0.3s ease; */
+    border: 1px solid #e5e7eb;
+    animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* ✅ REMOVE .toast.show - animation handles the showing */
+/* .toast.show {
+    transform: translateX(0);
+    opacity: 1;
+} */
+
+.toast.success {
+    border-left-color: #1A2B4C;
+}
+
+.toast.error {
+    border-left-color: #dc2626;
+}
+
+.toast.info {
+    border-left-color: #1A2B4C;
+}
+
+.toast-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.toast.success .toast-icon {
+    background: #1A2B4C;
+    color: white;
+}
+
+.toast.error .toast-icon {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.toast.info .toast-icon {
+    background: #1A2B4C;
+    color: white;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1A2B4C;
+    margin-bottom: 2px;
+}
+
+.toast-message {
+    font-size: 13px;
+    color: #4b5563;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toast-close:hover {
+    background: #f3f4f6;
+    color: #1A2B4C;
+}

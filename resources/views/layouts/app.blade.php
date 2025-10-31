@@ -83,9 +83,62 @@
       </section>
     </main>
   </div>
-
+  
+  <!-- ✅ TOAST CONTAINER -->
+  <div id="toastContainer" class="toast-container"></div>
+  
   <!-- ✅ Global Core Script (for both dashboards) -->
   @vite('resources/js/patient/core.js')
   @stack('scripts')
+
+  <!-- ✅ BEAUTIFUL TOAST SYSTEM -->
+  <script>
+// Simple Toast Function (No Class)
+function showToast({ title, message, type = 'success', duration = 5000 }) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icons = {
+        success: '✓',
+        error: '✕',
+        info: 'ℹ'
+    };
+
+    toast.innerHTML = `
+        <div class="toast-icon">${icons[type]}</div>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close">&times;</button>
+    `;
+
+    container.appendChild(toast);
+
+    // Hide function
+    const hideToast = () => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 300);
+    };
+
+    // Close button
+    toast.querySelector('.toast-close').addEventListener('click', hideToast);
+
+    // Auto hide
+    if (duration > 0) {
+        setTimeout(hideToast, duration);
+    }
+
+    return toast;
+}
+
+// Make it globally available
+window.showToast = showToast;
+</script>
 </body>
 </html>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class PatientSettingsController extends Controller
 {
@@ -21,13 +22,27 @@ class PatientSettingsController extends Controller
             $patient = $user->patient;
             $settings = $user->settings;
 
-            $validated = $request->validate([
+            // ADD CUSTOM VALIDATION WITH PROPER ERROR HANDLING
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'phone' => 'nullable|string|max:20',
                 'password' => 'nullable|min:8|confirmed',
                 'dark_mode' => 'sometimes|boolean',
                 'language' => 'sometimes|in:en,fil'
+            ], [
+                'password.min' => 'Password must be at least 8 characters long.',
+                'password.confirmed' => 'Password confirmation does not match.',
             ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please fix the validation errors.',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            $validated = $validator->validated();
 
             // SIMPLE OTP CHECK - Only if password is being changed
             if (!empty($validated['password']) && !session('otp_verified')) {
@@ -43,13 +58,13 @@ class PatientSettingsController extends Controller
                     if ($emailSent) {
                         return response()->json([
                             'otp_required' => true,
-                            'message' => '📧 Verification code sent to your email! Check your inbox.'
-                        ]); // ✅ REMOVED: , 422
+                            'message' => 'Verification code sent to your email! Check your inbox.'
+                        ]);
                     } else {
                         return response()->json([
                             'success' => false,
                             'message' => '❌ Failed to send verification email. Please try again.'
-                        ], 422);
+                        ]);
                     }
                 }
             }
@@ -83,9 +98,10 @@ class PatientSettingsController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Settings update error: ' . $e->getMessage());
+            \Log::error('Settings update trace: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
-                'message' => 'Error updating settings'
+                'message' => 'Error updating settings: ' . $e->getMessage()
             ], 500);
         }
     }

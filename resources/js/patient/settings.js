@@ -44,83 +44,113 @@ class SettingsPage extends Page {
       DarkMode.apply();
     });
 
-    // Form submission - FIXED WITH ALERT AND REDIRECT
-form?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  let saveBtn = this.container.querySelector('#saveBtn');
-  let data; // Declare data variable for finally block
-  
-  // Prevent multiple clicks only if saveBtn exists
-  if (saveBtn && saveBtn.disabled) {
-    console.log('🛑 Button already clicked, ignoring...');
-    return;
-  }
-  
-  // Set loading state only if saveBtn exists
-  const originalText = saveBtn ? saveBtn.textContent : 'Save Changes';
-  if (saveBtn) {
-    saveBtn.disabled = true;
-    saveBtn.textContent = 'Saving...';
-  }
-  
-  const formData = new FormData(form);
-  
-  try {
-    console.log('🔄 Sending request...');
-    const response = await fetch(form.action, {
-      method: 'POST',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Accept': 'application/json',
-      },
-      body: formData
-    });
-
-    data = await response.json(); // Assign to the outer variable
-
-    console.log('📊 Response status:', response.status);
-    console.log('📦 Response data:', data);
-
-    // Check for OTP required - SHOW ALERT AND REDIRECT
-    if (data.otp_required === true) {
-      console.log('🔐 OTP required, redirecting...');
-      // Re-enable button briefly before redirect
+    // ✅ FIXED FORM SUBMISSION WITH BUTTON STATE MANAGEMENT
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      console.log('🔄 Form submission started...');
+      
+      let saveBtn = this.container.querySelector('#saveBtn');
+      let data;
+      
+      // ✅ ADDED: Prevent multiple clicks
+      if (saveBtn && saveBtn.disabled) {
+        console.log('🛑 Button already clicked, ignoring...');
+        return;
+      }
+      
+      // ✅ ADDED: Set loading state
+      const originalText = saveBtn ? saveBtn.textContent : 'Save Changes';
       if (saveBtn) {
-        saveBtn.disabled = false;
-        saveBtn.textContent = originalText;
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
       }
-      alert('📧 ' + data.message); // ✅ ADDED BACK THE ALERT
-      window.location.href = '/patient/verify-otp';
-      return;
-    }
+      
+      const formData = new FormData(form);
+      
+      try {
+        console.log('📤 Sending request to:', form.action);
+        
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+          },
+          body: formData
+        });
 
-    // Handle success
-    if (response.ok) {
-      alert('✅ ' + (data.message || 'Settings saved successfully!'));
-      const darkModeChecked = darkMode?.checked || false;
-      localStorage.setItem('darkMode', darkModeChecked ? 'true' : 'false');
-      DarkMode.apply();
-    } else {
-      // Handle errors
-      if (data.errors) {
-        const errorMessages = Object.values(data.errors).flat().join('\n');
-        alert('❌ ' + errorMessages);
-      } else {
-        alert('❌ ' + (data.message || 'Error saving settings'));
+        console.log('📥 Response status:', response.status);
+        console.log('📥 Response ok:', response.ok);
+
+        data = await response.json();
+        console.log('📦 Response data:', data);
+
+        // Check for OTP required
+        if (data.otp_required === true) {
+          console.log('🔐 OTP required, redirecting...');
+          // ✅ ADDED: Re-enable button before redirect
+          if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalText;
+          }
+          window.showToast({
+            title: 'Verification Required!',
+            message: data.message,
+            type: 'info',
+            duration: 3000
+          });
+          setTimeout(() => {
+            window.location.href = '/patient/verify-otp';
+          }, 1500);
+          return;
+        }
+
+        // Handle success
+        if (response.ok) {
+          window.showToast({
+            title: 'Success!',
+            message: data.message || 'Settings updated successfully!',
+            type: 'success'
+          });
+          const darkModeChecked = darkMode?.checked || false;
+          localStorage.setItem('darkMode', darkModeChecked ? 'true' : 'false');
+          DarkMode.apply();
+        } else {
+          // Handle errors
+          if (data.errors) {
+            const errorMessages = Object.values(data.errors).flat().join('\n');
+            window.showToast({
+              title: 'Error',
+              message: errorMessages,
+              type: 'error'
+            });
+          } else {
+            window.showToast({
+              title: 'Error',
+              message: data.message || 'Error saving settings',
+              type: 'error'
+            });
+          }
+        }
+      } catch (error) {
+        console.error('❌ Fetch error details:', error);
+        console.error('❌ Error name:', error.name);
+        console.error('❌ Error message:', error.message);
+        
+        window.showToast({
+          title: 'Network Error',
+          message: 'Please check your connection and try again',
+          type: 'error'
+        });
+      } finally {
+        // ✅ ADDED: Always re-enable button (except when redirecting)
+        if (saveBtn && !data?.otp_required) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Save Changes';
+        }
       }
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('❌ Network error - please try again');
-  } finally {
-    // Always re-enable button (except when redirecting)
-    if (saveBtn && !data?.otp_required) {
-      saveBtn.disabled = false;
-      saveBtn.textContent = 'Save Changes';
-    }
-  }
-});
+    });
 
     // Cancel button
     this.container.querySelector('#cancelBtnSettings')?.addEventListener('click', () => {

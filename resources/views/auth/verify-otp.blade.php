@@ -11,7 +11,7 @@
         </div>
 
         <div class="otp-email-info">
-            <strong>📧 {{ auth()->user()->email }}</strong>
+            <strong>{{ auth()->user()->email }}</strong>
         </div>
 
         <form id="verifyOtpForm" class="otp-form">
@@ -162,52 +162,62 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Form submission
     verifyForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const otpCode = otpInput.value.trim();
-        
-        if (otpCode.length !== 6) {
-            showError('Please enter a 6-digit code');
-            return;
-        }
+    e.preventDefault();
+    
+    const otpCode = otpInput.value.trim();
+    
+    if (otpCode.length !== 6) {
+        showError('Please enter a 6-digit code');
+        return;
+    }
 
-        // Show loading state
-        verifyBtn.textContent = 'Verifying...';
-        verifyBtn.disabled = true;
-        hideError();
+    // Show loading state
+    verifyBtn.textContent = 'Verifying...';
+    verifyBtn.disabled = true;
+    hideError();
 
-        // Submit via AJAX
-        fetch('{{ route("patient.verify.otp.submit") }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ otp_code: otpCode })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('✅ ' + data.message);
-                if (data.redirect) {
-                    window.location.href = data.redirect;
-                } else {
-                    window.location.href = '{{ route("patient.settings") }}';
-                }
-            } else {
-                showError(data.message);
-                otpInput.value = '';
-                otpInput.focus();
-                verifyBtn.textContent = 'Verify & Change Password';
-                verifyBtn.disabled = false;
-            }
-        })
-        .catch(error => {
-            showError('Network error. Please try again.');
-            verifyBtn.textContent = 'Verify & Change Password';
-            verifyBtn.disabled = false;
+    // Submit via AJAX
+    fetch('{{ route("patient.verify.otp.submit") }}', {
+        method: 'POST',
+        headers: {
+        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+        },
+        body: JSON.stringify({ otp_code: otpCode })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+        // ✅ BEAUTIFUL TOAST INSTEAD OF ALERT
+        window.showToast({
+            title: 'Success!',
+            message: data.message || 'Password changed successfully!',
+            type: 'success',
+            duration: 3000
         });
+        
+        // Redirect after toast is visible
+        setTimeout(() => {
+            if (data.redirect) {
+            window.location.href = data.redirect;
+            } else {
+            window.location.href = '{{ route("patient.settings") }}';
+            }
+        }, 1500);
+        } else {
+        showError(data.message);
+        otpInput.value = '';
+        otpInput.focus();
+        verifyBtn.textContent = 'Verify & Change Password';
+        verifyBtn.disabled = false;
+        }
+    })
+    .catch(error => {
+        showError('Network error. Please try again.');
+        verifyBtn.textContent = 'Verify & Change Password';
+        verifyBtn.disabled = false;
+    });
     });
 
     // Auto-submit when 6 digits are entered
@@ -234,19 +244,30 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('✅ ' + data.message);
-                    // Reset timer and form
-                    timeLeft = 15 * 60;
-                    updateCountdown();
-                    otpInput.disabled = false;
-                    otpInput.value = '';
-                    otpInput.focus();
-                    verifyBtn.disabled = false;
-                    verifyBtn.textContent = 'Verify & Change Password';
-                    hideError();
-                } else {
-                    alert('❌ ' + data.message);
-                }
+                window.showToast({
+                    title: 'Code Sent!',
+                    message: data.message,
+                    type: 'info',
+                    duration: 3000
+                });
+                
+                // Reset timer and form
+                timeLeft = 15 * 60;
+                updateCountdown();
+                otpInput.disabled = false;
+                otpInput.value = '';
+                otpInput.focus();
+                verifyBtn.disabled = false;
+                verifyBtn.textContent = 'Verify & Change Password';
+                hideError();
+            } else {
+                window.showToast({
+                    title: 'Error',
+                    message: data.message,
+                    type: 'error',
+                    duration: 4000
+                });
+            }
             });
         }
     });

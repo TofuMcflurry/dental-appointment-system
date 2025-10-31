@@ -41,7 +41,7 @@
         <!-- Security -->
         <h3 style="margin: 24px 0 16px 0; color: var(--accent);">Security</h3>
         
-        <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 16px; border-left: 4px solid #22c55e;">
+        <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 16px; border-left: 4px solid #3b82f6;">
             <strong>🔒 Password Change Security</strong>
             <p style="margin: 4px 0 0 0; font-size: 13px; color: #666;">
                 You'll receive a verification code via email when changing your password.
