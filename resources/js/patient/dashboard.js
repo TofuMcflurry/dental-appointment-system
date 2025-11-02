@@ -84,30 +84,30 @@ class DashboardPage {
   }
 
   _renderBracesGrid() {
-    const bracesGrid = this.container.querySelector('#bracesGrid');
-    const selectedText = this.container.querySelector('#selectedColorText');
-    if (!bracesGrid || !selectedText) return;
+      const bracesGrid = this.container.querySelector('#bracesGrid');
+      const selectedText = this.container.querySelector('#selectedColorText');
+      if (!bracesGrid || !selectedText) return;
 
-    const colors = ['BLACK', 'GRAY', 'ORANGE', 'RED', 'VIOLET', 'INDIGO', 'BLUE', 'CYAN', 'TEAL', 'GREEN', 'YELLOW', 'PINK', 'WHITE', 'MAROON', 'BROWN'];
-    bracesGrid.innerHTML = '';
+      const colors = ['BLACK', 'GRAY', 'ORANGE', 'RED', 'VIOLET', 'INDIGO', 'BLUE', 'CYAN', 'TEAL', 'GREEN', 'YELLOW', 'PINK', 'WHITE', 'MAROON', 'BROWN'];
+      bracesGrid.innerHTML = '';
 
-    colors.forEach(c => {
-      const box = document.createElement('div');
-      box.className = 'color-box';
-      box.style.background = c.toLowerCase() === 'white' ? '#ffffff' : c;
-      if (c.toLowerCase() === (this.data.bracesColor || '').toLowerCase()) box.classList.add('selected');
-      box.title = c;
-      box.addEventListener('click', () => {
-        this.data.bracesColor = c;
-        DataStore.save(this.data);
-        this.render();
+      colors.forEach(c => {
+        const box = document.createElement('div');
+        box.className = 'color-box';
+        box.style.background = c.toLowerCase() === 'white' ? '#ffffff' : c;
+        if (c.toLowerCase() === (this.data.bracesColor || '').toLowerCase()) box.classList.add('selected');
+        box.title = c;
+        box.addEventListener('click', () => {
+          this.data.bracesColor = c;
+          DataStore.save(this.data);
+          this.render();
+        });
+        bracesGrid.appendChild(box);
       });
-      bracesGrid.appendChild(box);
-    });
 
-    selectedText.textContent = this.data.bracesColor || '—';
+      selectedText.textContent = this.data.bracesColor || '—';
+    }
   }
-}
 
 export { DashboardPage };
 
