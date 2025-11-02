@@ -2,6 +2,10 @@
 
 @section('title', 'Appointments')
 
+@section('page-style')
+  @vite(['resources/css/admin/appointments.css'])
+@endsection
+
 @section('content')
 <!-- Appointment Page Content -->
 <section id="appointments" class="content">
@@ -84,3 +88,7 @@
   </div>
 </section>
 @endsection
+
+@section('page-script')
+  @vite(['resources/js/admin/appointments.js'])
+@endsection 

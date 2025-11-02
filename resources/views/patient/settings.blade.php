@@ -2,6 +2,10 @@
 
 @section('title', 'Settings')
 
+@section('page-style')
+  @vite(['resources/css/patient/settings.css'])
+@endsection
+
 @section('content')
 <div id="settingsPage" class="settings-page">
     <h3>Profile Settings</h3>
@@ -87,4 +91,8 @@
         </div>
     </form>
 </div>
+@endsection
+
+@section('page-script')
+  @vite(['resources/js/patient/settings.js'])
 @endsection

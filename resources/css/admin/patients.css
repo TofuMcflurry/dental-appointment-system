@@ -1,94 +1,154 @@
-/* Patients Page Styles */
-.content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  border: 1px solid rgba(0,0,0,0.06);
-  margin-bottom: 20px;
+/* Patients Page Styles (Compatible with app.layout.php) */
+#patients .main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.content-header {
+#patients .card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Header Section */
+#patients .content-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 }
 
-.content-header h3 {
+#patients .content-header h3 {
   font-size: 18px;
   font-weight: 600;
-  margin: 0;
   color: #1A2B4C;
+  margin: 0;
 }
 
-.search-box input {
-  padding: 8px 12px;
+/* Search Box */
+#patients .search-box {
+  position: relative;
+}
+
+#patients .search-box::before {
+  content: "🔍";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #8b95a6;
+}
+
+#patients .search-box input {
+  padding: 8px 12px 8px 36px;
   border: 1px solid rgba(0,0,0,0.15);
   border-radius: 6px;
   font-size: 14px;
   width: 200px;
+  transition: all 0.2s ease;
 }
 
-.table {
+#patients .search-box input:focus {
+  outline: none;
+  border-color: #2d7ff9;
+  box-shadow: 0 0 0 2px rgba(45, 127, 249, 0.1);
+}
+
+/* Table */
+#patients table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
 }
 
-.table thead th {
+#patients table thead {
+  background: #f8f9fa;
+  border-bottom: 2px solid #e8ecef;
+}
+
+#patients table thead th {
   text-align: left;
-  padding: 10px 8px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding: 12px 16px;
   font-weight: 600;
-  color: #8b95a6;
+  color: #5a6378;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.table tbody td {
-  padding: 10px 8px;
-  border-bottom: 1px dashed rgba(0,0,0,0.04);
+#patients table tbody tr {
+  border-bottom: 1px solid #f0f2f5;
+  transition: background-color 0.2s ease;
 }
 
-.table .empty {
+#patients table tbody tr:hover {
+  background: #f8fafc;
+}
+
+#patients table tbody tr:last-child {
+  border-bottom: none;
+}
+
+#patients table tbody td {
+  padding: 14px 16px;
+  color: #2d3747;
+  font-weight: 500;
+}
+
+#patients table tbody td:first-child {
+  font-weight: 600;
+  color: #1a2b4c;
+}
+
+#patients .empty {
   text-align: center;
   color: #8b95a6;
-  padding: 12px;
-}
-
-/* Patient Details Panel */
-.details-wrap {
-  display: none; /* Hidden by default, show only when patient selected */
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 10px;
-  padding: 16px;
-  margin-top: 20px;
-}
-
-.details-wrap h3 {
-  margin-top: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: #1A2B4C;
-}
-
-.details-wrap .info {
-  margin-bottom: 12px;
-}
-
-.details-wrap .placeholder {
-  color: #8b95a6;
+  padding: 40px 20px;
   font-style: italic;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .content-header {
+  #patients .content-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 12px;
   }
 
-  .search-box input {
+  #patients .search-box input {
     width: 100%;
+  }
+
+  #patients table thead {
+    display: none;
+  }
+
+  #patients table tbody tr {
+    display: block;
+    margin-bottom: 12px;
+    padding: 16px;
+    border: 1px solid #e8ecef;
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  #patients table tbody td {
+    display: block;
+    padding: 8px 0;
+    border: none;
+  }
+
+  #patients table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #5a6378;
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
   }
 }

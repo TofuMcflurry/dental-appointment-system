@@ -2,6 +2,10 @@
 
 @section('title', 'Notifications')
 
+@section('page-style')
+  @vite(['resources/css/patient/notification.css'])
+@endsection
+
 @section('content')
 <div id="notificationsPage" class="page-transition">
   <h3 id="notifTitle">Recent Notifications</h3>
@@ -187,4 +191,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+@endsection
+
+@section('page-script')
+  @vite(['resources/js/patient/notification.js'])
 @endsection

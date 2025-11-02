@@ -2,6 +2,10 @@
 
 @section('title', 'Appointments')
 
+@section('page-style')
+  @vite(['resources/css/patient/appointments.css'])
+@endsection
+
 @section('content')
 <div id="appointmentsPage" class="page-transition">
 
@@ -63,6 +67,11 @@
           <div id="summaryService">Service: —</div>
         </div>
 
+        <div class="form-actions">
+          <button type="submit" id="bookApptBtn" class="btn save">Book</button>
+          <button type="reset" id="cancelApptBtn" class="btn cancel">Cancel</button>
+        </div>
+        
       </div>
 
       {{-- Right Column --}}
@@ -97,20 +106,13 @@
 
     </div>
 
-    {{-- Form Buttons --}}
-    <div class="form-actions" style="margin-top:12px;">
-      <button type="submit" id="bookApptBtn" class="btn save">Book</button>
-      <button type="reset" id="cancelApptBtn" class="btn cancel">Cancel</button>
-    </div>
   </form>
 </div>
-{{-- This closes the main appointmentsPage div --}}
-
-<!-- Include the confirmation modal -->
 @include('components.appointment-confirmation')
 
 @endsection
 
 @push('scripts')
+  @vite(['resources/js/patient/appointments.js'])
   @vite('resources/js/patient/core.js')
 @endpush

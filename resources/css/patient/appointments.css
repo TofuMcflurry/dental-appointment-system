@@ -1,63 +1,203 @@
-.appointments-section {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
+/* appointments.css — styling for appointments.blade.php */
+
+/* Main appointments page */
+#appointmentsPage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  width: 100%;
+}
+
+#appointmentsPage .left-section {
+  flex: 2;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
-  margin-bottom: 16px;
-  padding: 16px;
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 12px;
-  background: var(--card);
-  box-shadow: 0 4px 12px rgba(0,0,0,.01);
 }
 
-.appointments-list .appt {
+#appointmentsPage .right-section {
+  flex: 1;
+  min-width: 300px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 8px;
-  border-bottom: 1px solid #eee;
+  flex-direction: column;
+  gap: 16px;
 }
-.appt .meta { display: flex; flex-direction: column; }
-.appt .time { font-size: 13px; color: var(--muted); }
 
-.status-pill {
-  padding: 6px 10px;
-  border-radius: 999px;
+/* Form groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
   font-weight: 600;
-  font-size: 12px;
-  color: #fff;
+  color: var(--accent);
 }
-.status-upcoming { background: #10b981; }
-.status-missed { background: #ef4444; }
-.status-cancelled { background: #f59e0b; }
 
-/* Appointment Form */
-.appt-form { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.form-group input,
+.form-group select,
+textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f9fafb;
+  font-size: 14px;
+}
+
+/* Add margin between Gender and Selected section */
+#appointmentsPage .form-group:has(#gender) {
+  margin-bottom: 8px; /* Adds space after Gender dropdown */
+}
+
+/* Appointment summary */
 .appt-summary {
-  margin-top: 12px;
-  padding: 12px;
-  border: 1px solid #eee;
-  border-radius: 6px;
-  background: #fafafa;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 14px;
+  margin-top: 8px; /* Adds space before Selected section */
+  margin-bottom: 16px;
 }
-.form-actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 12px;
+
+.appt-summary h4 {
+  margin: 0 0 12px 0;
+  color: var(--accent);
+  font-size: 16px;
 }
+
+.appt-summary p {
+  margin: 8px 0;
+  color: #555;
+}
+
+/* Dental Services */
 .services-list {
-  height: 220px;
-  overflow: auto;
+  height: 240px;
+  overflow-y: auto;
   border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 8px;
+  border-radius: 8px;
+  padding: 10px;
+  background: #f9fafb;
 }
+
 .services-list label {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px;
+  padding: 6px 4px;
   border-radius: 6px;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.services-list label:hover {
+  background: #eef2ff;
+}
+
+/* Notes Section */
+textarea {
+  resize: none;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+  min-height: 120px;
+}
+
+/* Form buttons - REFACTORED: buttons on opposite sides */
+.form-actions {
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.btn.save {
+  background: var(--accent);
+  color: #fff;
+  margin-left: auto; /* Pushes save button to the right */
+}
+
+.btn.cancel {
+  background: #e5e7eb;
+  color: #333;
+  margin-right: auto; /* Keeps cancel button on the left */
+}
+
+.btn.save:hover {
+  background: #1e3a8a;
+  transform: translateY(-1px);
+}
+
+.btn.cancel:hover {
+  background: #d1d5db;
+  transform: translateY(-1px);
+}
+
+/* Remove the old right-buttons class */
+.right-buttons {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  #appointmentsPage {
+    flex-direction: column;
+  }
+
+  #appointmentsPage .left-section,
+  #appointmentsPage .right-section {
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+    margin: 0 !important; /* Remove margins on mobile */
+  }
+}
+
+/* Additional styling for better layout */
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #eef2ff;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+/* Clinic hours info */
+.clinic-info {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 12px 0;
+  font-size: 13px;
+  color: #0369a1;
 }

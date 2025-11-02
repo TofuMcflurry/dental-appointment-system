@@ -2,6 +2,10 @@
 
 @section('title', 'Dashboard')
 
+@section('page-style')
+  @vite(['resources/css/admin/dashboard.css'])
+@endsection
+
 @section('content')
 <div class="dashboard-page">
   <div class="card">
@@ -45,3 +49,8 @@
   </div>
 </div>
 @endsection
+
+@section('page-script')
+  @vite(['resources/js/admin/dashboard.js'])
+@endsection
+

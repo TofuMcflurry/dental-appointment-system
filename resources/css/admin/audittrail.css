@@ -1,45 +1,71 @@
-/* Notifications List Styling */
-  #notificationsList .notification {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  #notificationsList .notification:hover {
-    background: #f9fbfc;
-  }
-  #notificationsList .notification:last-child {
-    border-bottom: none;
-  }
-  #notificationsList .notification-icon {
-    font-size: 18px;
-    color: var(--accent);
-  }
-  #notificationsList .notification-text {
-    display: flex;
-    flex-direction: column;
-  }
-  #notificationsList .notification-text strong {
-    font-weight: 600;
-    font-size: 14px;
-    margin-bottom: 2px;
-  }
-  #notificationsList .notification-text small {
+/* Audit Trail Table Styling */
+.content {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.content-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+/* Table Styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table thead tr {
+  background: #f1f4f6;
+  color: var(--accent);
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.table tbody tr:hover {
+  background: #f9fbfc;
+  transition: background 0.15s ease;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Status Colors */
+.table td:nth-child(4) {
+  font-weight: 600;
+}
+
+.table td:nth-child(4):contains("Confirmed") {
+  color: #28a745;
+}
+
+.table td:nth-child(4):contains("Created") {
+  color: #007bff;
+}
+
+.table td:nth-child(4):contains("Cancelled") {
+  color: #dc3545;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .table {
     font-size: 13px;
-    color: var(--muted);
   }
-  #notificationsList .notification.unread strong {
-    font-weight: 700;
+
+  .table th,
+  .table td {
+    padding: 10px;
   }
-  #notificationsList .notification.unread::after {
-    content: "";
-    width: 8px;
-    height: 8px;
-    background: #007bff;
-    border-radius: 50%;
-    margin-left: auto;
-    margin-top: 6px;
-  }
+}

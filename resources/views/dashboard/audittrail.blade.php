@@ -2,6 +2,10 @@
 
 @section('title', 'Audit Trail')
 
+@section('page-style')
+  @vite(['resources/css/admin/audittrail.css'])
+@endsection
+
 @section('content')
 <section class="content">
   <div class="content-header">
@@ -39,4 +43,8 @@
     </tbody>
   </table>
 </section>
+@endsection
+
+@section('page-script')
+  @vite(['resources/js/admin/audittrail.js'])
 @endsection

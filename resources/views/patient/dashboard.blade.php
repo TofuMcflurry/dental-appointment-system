@@ -6,6 +6,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 @endpush --}}
 
+@section('page-style')
+  @vite(['resources/css/patient/dashboard.css'])
+@endsection
+
 @section('content')
 <div id="dashboardPage" class="page-transition">
     <h3 id="dashTitle">Welcome to LCAD Dental Care</h3>
@@ -132,5 +136,6 @@
 </div>
 @endsection
 @push('scripts')
+  @vite(['resources/js/patient/dashboard.js'])
   @vite('resources/js/patient/core.js')
 @endpush
