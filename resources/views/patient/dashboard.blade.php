@@ -122,17 +122,6 @@
             </div>
         </div>
     </div>
-
-    <div class="card notifications-list">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <h4 style="margin:0">Notifications</h4>
-            <div class="top-controls">
-                <button id="simulateReminder" class="simulate-admin" title="Simulate admin sending a reminder">Admin: Send Reminder</button>
-                <button id="clearRead" class="btn cancel" style="padding:6px 10px">Clear Read</button>
-            </div>
-        </div>
-        <div id="notifsContainer" class="notifsContainer">Loading…</div>
-    </div>
 </div>
 @endsection
 @push('scripts')

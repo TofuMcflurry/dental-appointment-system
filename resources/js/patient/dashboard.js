@@ -1,4 +1,4 @@
-import { DataStore, fmtDate, isSameDay, escapeHtml } from './base.js';
+import { DataStore, fmtDate, escapeHtml } from './base.js';
 
 class DashboardPage {
   constructor(containerId = 'dashboardPage') {
@@ -11,7 +11,6 @@ class DashboardPage {
     // Load initial data
     this.data = window.patientData || DataStore.load() || {
       appointments: [],
-      notifications: [],
       bracesColor: 'BLACK'
     };
 
@@ -37,30 +36,8 @@ class DashboardPage {
   render() {
     if (!this.container) return;
 
-    this._renderSummary();
     this._renderAppointments();
     this._renderBracesGrid();
-    this._renderNotifications();
-    this._setupEventListeners();
-  }
-
-  _renderSummary() {
-    const now = new Date();
-    const next = this.data.appointments
-      .filter(a => !a.cancelled && new Date(a.datetime) > now)
-      .sort((a, b) => new Date(a.datetime) - new Date(b.datetime))[0];
-
-    const remindersToday = this.data.notifications
-      .filter(n => n.type === 'reminder' && isSameDay(n.datetime, now.toISOString()))
-      .length;
-
-    const nextEl = this.container.querySelector('#nextAppointment');
-    const statusEl = this.container.querySelector('#statusConfirmed');
-    const remindersEl = this.container.querySelector('#remindersToday');
-
-    if (nextEl) nextEl.textContent = next ? `${escapeHtml(next.title)} — ${escapeHtml(fmtDate(next.datetime))}` : 'No upcoming appointment';
-    if (statusEl) statusEl.textContent = next ? (next.confirmed ? 'Confirmed' : 'Pending confirmation') : '—';
-    if (remindersEl) remindersEl.textContent = remindersToday;
   }
 
   _renderAppointments() {
@@ -129,43 +106,6 @@ class DashboardPage {
     });
 
     selectedText.textContent = this.data.bracesColor || '—';
-  }
-
-  _renderNotifications() {
-    const notifsContainer = this.container.querySelector('#notifsContainer');
-    if (!notifsContainer) return;
-
-    notifsContainer.innerHTML = '';
-
-    if (!this.data.notifications?.length) {
-      notifsContainer.innerHTML = '<div class="muted">No notifications</div>';
-      return;
-    }
-
-    this.data.notifications.forEach(n => {
-      const notifDiv = document.createElement('div');
-      notifDiv.className = `notif ${n.read ? 'read' : 'unread'}`;
-      notifDiv.innerHTML = `<strong>${escapeHtml(n.title)}</strong> — <span>${fmtDate(n.datetime)}</span>`;
-      notifsContainer.appendChild(notifDiv);
-    });
-  }
-
-  _setupEventListeners() {
-    const simulateBtn = this.container.querySelector('#simulateReminder');
-    const clearBtn = this.container.querySelector('#clearRead');
-
-    simulateBtn?.addEventListener('click', () => this.simulateReminder());
-    clearBtn?.addEventListener('click', () => this.clearReadNotifications());
-  }
-
-  simulateReminder() {
-    alert('Simulate reminder clicked! (You can integrate real logic here)');
-  }
-
-  clearReadNotifications() {
-    this.data.notifications = this.data.notifications.map(n => ({ ...n, read: true }));
-    DataStore.save(this.data);
-    this._renderNotifications();
   }
 }
 

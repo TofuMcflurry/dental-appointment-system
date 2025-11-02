@@ -96,10 +96,10 @@
 
         {{-- Notes --}}
         <div style="margin-top:12px;">
-          <label for="notes" style="font-weight:500;color:var(--accent);display:block;margin-bottom:6px">
+          <label for="notes" style="font-weight:600; color:var(--accent); display:block; margin-bottom:8px; font-size:18px;">
             Appointment Details / Notes
           </label>
-          <textarea id="notes" name="notes" rows="6" style="width:100%; max-height:200px;" placeholder="Write any notes, concerns, or medical history here..."></textarea>
+          <textarea id="notes" name="notes" rows="8" style="width:100%; height:250px; max-height:200px; font-size:16px;" placeholder="Write any notes, concerns, or medical history here..."></textarea>
         </div>
 
       </div>

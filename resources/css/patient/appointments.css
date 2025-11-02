@@ -110,6 +110,7 @@ textarea {
 
 /* Form buttons - REFACTORED: buttons on opposite sides */
 .form-actions {
+  margin-top: 12px;
 }
 
 .btn {
