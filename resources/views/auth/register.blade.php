@@ -72,7 +72,7 @@
 
       <!-- Email / Contact -->
       <div>
-        <input class="field" name="email" type="email" placeholder="Email or mobile number" value="{{ old('email') }}" required>
+        <input class="field" name="email" type="email" placeholder="Email Address" value="{{ old('email') }}" required>
         <x-input-error :messages="$errors->get('email')" class="mt-2" />
       </div>
 

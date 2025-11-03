@@ -18,8 +18,12 @@ class Patient extends Authenticatable
         'contact_number',
         'email',
         'address',
-        'treatment_plan',
     ];
+
+    public function bracesSchedule()
+    {
+        return $this->hasOne(BracesSchedule::class, 'patient_id', 'patient_id');
+    }
 
     public function user()
     {

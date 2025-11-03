@@ -1,8 +1,7 @@
 /* Patients Page Styles (Compatible with app.layout.php) */
 #patients .main-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: block;
+  position: relative;
 }
 
 #patients .card {
@@ -11,6 +10,7 @@
   border: 1px solid rgba(0,0,0,0.06);
   padding: 20px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  width: 100%;
 }
 
 /* Header Section */
@@ -33,22 +33,12 @@
   position: relative;
 }
 
-#patients .search-box::before {
-  content: "🔍";
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-  color: #8b95a6;
-}
-
 #patients .search-box input {
-  padding: 8px 12px 8px 36px;
   border: 1px solid rgba(0,0,0,0.15);
   border-radius: 6px;
   font-size: 14px;
   width: 200px;
+  padding: 8px 12px;
   transition: all 0.2s ease;
 }
 
@@ -111,8 +101,249 @@
   font-style: italic;
 }
 
+/* View Action Button - Matching your design system */
+#patients .btn-view {
+  background: #1A2B4C;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#patients .btn-view:hover {
+  background: #2d3b52;
+  transform: translateY(-1px);
+}
+
+#patients .btn-view:active {
+  transform: translateY(0);
+}
+
+/* No braces text */
+#patients .no-braces {
+  color: #8b95a6;
+  font-style: italic;
+  font-size: 13px;
+}
+
+/* Floating Details Panel - FIXED POSITION OVERLAY */
+#patients .details-panel {
+  position: fixed;
+  top: 0;
+  right: -450px; /* Hidden off-screen by default */
+  width: 450px;
+  height: 100vh;
+  background: #fff;
+  border-left: 1px solid rgba(0,0,0,0.06);
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+#patients .details-panel.active {
+  right: 0; /* Slide in from right */
+}
+
+/* Overlay background when panel is active */
+#patients .panel-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+#patients .panel-overlay.active {
+  display: block;
+}
+
+#patients .panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e8ecef;
+  background: #f8f9fa;
+  flex-shrink: 0;
+}
+
+#patients .panel-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1A2B4C;
+}
+
+#patients .close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #8b95a6;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+#patients .close-btn:hover {
+  background: #e9ecef;
+  color: #5a6378;
+}
+
+#patients .panel-body {
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+#patients .panel-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  border-top: 1px solid #e8ecef;
+  background: #f8f9fa;
+  flex-shrink: 0;
+}
+
+#patients .patient-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+#patients .info-section h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1A2B4C;
+  margin: 0 0 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#patients .info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+#patients .info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#patients .info-item.full-width {
+  grid-column: 1 / -1;
+}
+
+#patients .info-item label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #5a6378;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#patients .info-item span {
+  font-size: 14px;
+  color: #2d3747;
+  font-weight: 500;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e8ecef;
+}
+
+#patients .no-braces-message {
+  text-align: center;
+  padding: 24px;
+  color: #8b95a6;
+  font-style: italic;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px dashed #e8ecef;
+}
+
+#patients .panel-footer button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+#patients .btn-primary {
+  background: #1A2B4C;
+  color: white;
+}
+
+#patients .btn-primary:hover {
+  background: #2d3b52;
+  transform: translateY(-1px);
+}
+
+#patients .btn-secondary {
+  background: #f8f9fa;
+  color: #5a6378;
+  border: 1px solid #e8ecef;
+}
+
+#patients .btn-secondary:hover {
+  background: #e9ecef;
+  transform: translateY(-1px);
+}
+
+/* Status styles for braces */
+.braces-active {
+  color: #166534;
+  background: #dcfce7;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.braces-inactive {
+  color: #991b1b;
+  background: #fee2e2;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Remove old modal styles */
+#patients .modal {
+  display: none !important;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
+  #patients .details-panel {
+    width: 100%;
+    right: -100%;
+  }
+  
   #patients .content-header {
     flex-direction: column;
     align-items: flex-start;
@@ -150,5 +381,17 @@
     font-size: 12px;
     text-transform: uppercase;
     margin-bottom: 4px;
+  }
+
+  #patients .panel-body {
+    padding: 20px;
+  }
+  
+  #patients .panel-footer {
+    flex-direction: column;
+  }
+  
+  #patients .panel-footer button {
+    width: 100%;
   }
 }

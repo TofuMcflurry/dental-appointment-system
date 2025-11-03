@@ -43,6 +43,9 @@ class RegisteredUserController extends Controller
             'contact_number'  => ['nullable', 'string', 'max:20'],
         ]);
 
+        // Combine year, month, day into a proper birthdate format for MySQL
+        $birthdate = sprintf('%04d-%02d-%02d', $request->b_year, $request->b_month, $request->b_day);
+
         $user = User::create([
             'name' => $request->first_name . ' ' . $request->last_name,
             'email' => $request->email,
@@ -53,12 +56,11 @@ class RegisteredUserController extends Controller
         Patient::create([
             'user_id'        => $user->user_id,
             'full_name'      => $request->first_name . ' ' . $request->last_name,
-            'birthdate'      => $request->birthdate,
+            'birthdate'      => $birthdate, // Use the combined birthdate here
             'gender'         => $request->gender,
             'contact_number' => $request->contact_number,
             'email'          => $request->email,
             'address'        => $request->address,
-            'treatment_plan' => $request->treatment_plan,
         ]);
 
         event(new Registered($user));

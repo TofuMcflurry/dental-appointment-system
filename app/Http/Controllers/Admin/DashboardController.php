@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Appointment;
+use App\Models\Patient;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -54,7 +55,14 @@ class DashboardController extends Controller
 
     public function patients()
     {
-        return view('dashboard.patients');
+        $patients = Patient::with(['user', 'bracesSchedule'])
+            ->whereHas('user', function($query) {
+                $query->where('role', '!=', 'admin'); // Exclude admin users
+            })
+            ->orderBy('full_name', 'asc')
+            ->get();
+            
+        return view('dashboard.patients', compact('patients'));
     }
 
     public function audittrail()
