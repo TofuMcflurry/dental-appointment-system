@@ -8,7 +8,7 @@
 
 @section('content')
 <!-- Appointment Page Content -->
-<section id="appointments" class="content">
+<section id="appointments" class="content" data-appointments="{{ json_encode($appointments) }}">
   <div class="main-content">
     <!-- Table -->
     <section class="card">
@@ -38,23 +38,42 @@
 
     <!-- Details Panel -->
     <aside class="details" id="detailsPanel">
-      <h3>Appointment Details</h3>
+      <h3>
+        <i class="fa-solid fa-calendar-check"></i>
+        Appointment Details
+      </h3>
 
-      <h4>Patient Information</h4>
-      <div class="info" id="patientInfo">
-        <p class="placeholder">No patient details yet.</p>
+      <div class="section">
+        <h4>Patient Information</h4>
+        <div class="info" id="patientInfo">
+          <p class="placeholder">No patient details yet.</p>
+        </div>
       </div>
 
-      <h4>Appointment Information</h4>
-      <div class="info" id="appointmentInfo">
-        <p class="placeholder">No appointment scheduled.</p>
+      <div class="section">
+        <h4>Appointment Information</h4>
+        <div class="info" id="appointmentInfo">
+          <p class="placeholder">No appointment scheduled.</p>
+        </div>
       </div>
 
       <div class="actions">
-        <button id="confirmBtn" disabled>✓ Confirm</button>
-        <button id="cancelBtn" disabled>✕ Cancel</button>
-        <button id="reminderBtn" disabled>🔔 Reminder</button>
-        <button id="editBtn" disabled>✎ Edit</button>
+        <button id="confirmBtn" disabled>
+          <span>✓</span>
+          <span>Confirm</span>
+        </button>
+        <button id="cancelBtn" disabled>
+          <span>✕</span>
+          <span>Cancel</span>
+        </button>
+        <button id="reminderBtn" disabled>
+          <span>🔔</span>
+          <span>Reminder</span>
+        </button>
+        <button id="editBtn" disabled>
+          <span>✎</span>
+          <span>Edit</span>
+        </button>
       </div>
     </aside>
   </div>
@@ -91,4 +110,4 @@
 
 @section('page-script')
   @vite(['resources/js/admin/appointments.js'])
-@endsection 
+@endsection

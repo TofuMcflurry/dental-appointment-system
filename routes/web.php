@@ -32,7 +32,11 @@ Route::get('/dashboard', function () {
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', 'verified'])->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    
     Route::get('/appointments', [DashboardController::class, 'appointments'])->name('appointments');
+    Route::put('/appointments/{id}', [AppointmentController::class, 'update'])->name('appointments.update');
+    Route::patch('/appointments/{id}/status', [AppointmentController::class, 'updateStatus'])->name('appointments.status');
+
     Route::get('/patients', [DashboardController::class, 'patients'])->name('patients');
     Route::get('/audittrail', [DashboardController::class, 'audittrail'])->name('audittrail');
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');

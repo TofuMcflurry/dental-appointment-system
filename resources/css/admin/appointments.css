@@ -3,13 +3,13 @@
   font-family: "Poppins", sans-serif;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 /* Main content table + details */
 #appointments .main-content {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
@@ -17,29 +17,53 @@
 #appointments .card {
   flex: 2 1 600px;
   background: #ffffff;
-  padding: 16px;
-  border-radius: 10px;
-  border: 1px solid rgba(0,0,0,0.06);
-  box-shadow: 0 1px 0 rgba(15,23,42,0.06), inset 0 -1px 0 rgba(0,0,0,0.02);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #e1e5e9;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 #appointments .card h3 {
-  margin: 0 0 12px 0;
-  font-weight: 600;
-  color: #1A2B4C;
-  font-size: 16px;
+  margin: 0 0 16px 0;
+  font-weight: 700;
+  color: #1a365d;
+  font-size: 1.5rem;
+}
+
+/* Content Header with Search */
+#appointments .content-header {
+  display: flex;
+  justify-content: between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+#appointments .content-header h3 {
+  margin: 0;
+  flex: 1;
 }
 
 /* Search Box */
 #appointments .search-box {
-  margin-bottom: 12px;
+  flex: 0 0 300px;
 }
+
 #appointments #search {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid rgba(0,0,0,0.15);
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
   width: 100%;
   font-size: 14px;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+#appointments #search:focus {
+  outline: none;
+  border-color: #4299e1;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
 }
 
 /* Table */
@@ -48,122 +72,379 @@
   border-collapse: collapse;
   font-size: 14px;
 }
+
 #appointments table th,
 #appointments table td {
-  padding: 10px 8px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding: 14px 12px;
+  border-bottom: 1px solid #e2e8f0;
   text-align: left;
 }
+
 #appointments table th {
-  color: #8b95a6;
+  color: #4a5568;
   font-weight: 600;
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
 }
+
+#appointments table tr {
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+#appointments table tr:hover {
+  background: #f7fafc;
+}
+
 #appointments table td.empty {
   text-align: center;
-  color: #8b95a6;
-  padding: 12px;
+  color: #a0aec0;
+  padding: 40px 12px;
+  font-style: italic;
 }
 
 /* Details Panel */
 #appointments .details {
-  flex: 1 1 280px;
+  flex: 1 1 350px;
   background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid rgba(0,0,0,0.06);
-  padding: 16px;
-  box-shadow: 0 1px 0 rgba(15,23,42,0.06), inset 0 -1px 0 rgba(0,0,0,0.02);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  height: fit-content;
+  border: 1px solid #e1e5e9;
 }
 
 #appointments .details h3 {
-  margin: 0 0 12px 0;
-  font-weight: 600;
-  color: #1A2B4C;
-  font-size: 16px;
-}
-#appointments .details h4 {
-  margin: 10px 0 6px 0;
-  font-weight: 500;
-  color: #1A2B4C;
-  font-size: 14px;
-}
-#appointments .details .info p.placeholder {
-  color: #8b95a6;
-  font-size: 13px;
-  margin: 4px 0;
+  color: #1a365d;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Buttons */
-#appointments .details .actions {
+#appointments .details h3::before {
+  font-size: 1.25rem;
+}
+
+#appointments .section {
+  margin-bottom: 24px;
+}
+
+#appointments .details h4 {
+  color: #2d3748;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 12px 0;
   display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#appointments .details h4:first-of-type {
+  margin-top: 0;
+}
+
+#appointments .details h4::before {
+  font-size: 0.9rem;
+}
+
+#appointments .info {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 8px;
+}
+
+#appointments .info p {
+  margin: 8px 0;
+  color: #4a5568;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  display: grid;
+  grid-template-columns: 100px 1fr;
   gap: 8px;
-  margin-top: 16px;
+  align-items: start;
 }
-#appointments .details button {
-  padding: 8px 14px;
-  border-radius: 6px;
+
+#appointments .info p strong {
+  color: #2d3748;
+  font-weight: 600;
+  min-width: auto;
+}
+
+#appointments .info .placeholder {
+  color: #a0aec0;
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+  display: block;
+}
+
+/* Status Badge Enhancement */
+.status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: inline-block;
+  margin-left: 8px;
+}
+
+.status.pending {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+.status.confirmed {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #22c55e;
+}
+
+.status.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+.status.completed {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #3b82f6;
+}
+
+/* Actions Section */
+#appointments .actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 2px solid #f1f5f9;
+}
+
+#appointments .actions button {
+  padding: 12px 16px;
   border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
-  font-weight: 500;
-  font-size: 13px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
-#appointments .details button:disabled {
-  opacity: 0.6;
+
+#appointments .actions button:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none !important;
 }
-#appointments .details button#confirmBtn { background: #1A2B4C; color: #fff; }
-#appointments .details button#cancelBtn { background: #ddd; color: #111; }
-#appointments .details button#reminderBtn { background: #f7f7f7; color: #1A2B4C; }
-#appointments .details button#editBtn { background: #59677f; color: #fff; }
+
+#appointments .actions button:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Base Button Style */
+#appointments button {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-weight: 500;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.1s ease;
+}
+
+#appointments button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+/* Confirm Button */
+#appointments #confirmBtn {
+  background-color: #1f6f4a;
+}
+#appointments #confirmBtn:hover:not(:disabled) {
+  background-color: #195c3e;
+}
+
+/* Cancel Button */
+#appointments #cancelBtn {
+  background-color: #8b1e1e;
+}
+#appointments #cancelBtn:hover:not(:disabled) {
+  background-color: #701717;
+}
+
+/* Reminder Button */
+#appointments #reminderBtn {
+  background-color: #a8641a;
+}
+#appointments #reminderBtn:hover:not(:disabled) {
+  background-color: #8c5216;
+}
+
+/* Edit Button */
+#appointments #editBtn {
+  background-color: #1a2b4c;
+}
+#appointments #editBtn:hover:not(:disabled) {
+  background-color: #193f61;
+}
+
+/* Disabled State */
+#appointments button:disabled {
+  background-color: #3a4b6a;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 
 /* Modal */
 #appointments .modal {
   display: none;
   position: fixed;
-  top:0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
 }
+
 #appointments .modal-content {
   background: #fff;
-  border-radius: 10px;
-  padding: 20px;
-  width: 400px;
+  border-radius: 12px;
+  padding: 28px;
+  width: 440px;
   max-width: 95%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e1e5e9;
 }
+
 #appointments .modal-content h3 {
-  margin-top: 0;
-  font-weight: 600;
-  color: #1A2B4C;
+  margin: 0 0 20px 0;
+  font-weight: 700;
+  color: #1a365d;
+  font-size: 1.4rem;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f1f5f9;
 }
+
 #appointments .modal-content form label {
   display: block;
-  margin-top: 12px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #1A2B4C;
+  margin-top: 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2d3748;
 }
+
 #appointments .modal-content form input,
 #appointments .modal-content form select {
   width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  border: 1px solid rgba(0,0,0,0.15);
-  border-radius: 6px;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #f8fafc;
+  transition: all 0.2s ease;
 }
+
+#appointments .modal-content form input:focus,
+#appointments .modal-content form select:focus {
+  outline: none;
+  border-color: #4299e1;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
 #appointments .modal-content .actions {
   display: flex;
-  gap: 8px;
-  margin-top: 16px;
+  gap: 12px;
+  margin-top: 24px;
 }
+
 #appointments .modal-content button {
   flex: 1;
-  padding: 8px 0;
-  border-radius: 6px;
+  padding: 12px 0;
+  border-radius: 8px;
   border: none;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
 }
-#appointments .modal-content button[type="submit"] { background: #1A2B4C; color:#fff; }
-#appointments .modal-content button#closeModal { background: #ddd; color:#111; }
+
+#appointments .modal-content button[type="submit"] {
+  background: linear-gradient(135deg, #4299e1, #3182ce);
+  color: white;
+}
+
+#appointments .modal-content button[type="submit"]:hover {
+  background: linear-gradient(135deg, #3182ce, #2b6cb0);
+  transform: translateY(-1px);
+}
+
+#appointments .modal-content button#closeModal {
+  background: #e2e8f0;
+  color: #4a5568;
+}
+
+#appointments .modal-content button#closeModal:hover {
+  background: #cbd5e0;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #appointments .main-content {
+    flex-direction: column;
+  }
+  
+  #appointments .card,
+  #appointments .details {
+    flex: 1 1 auto;
+  }
+  
+  #appointments .content-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  #appointments .search-box {
+    flex: 1;
+  }
+  
+  #appointments .details {
+    padding: 20px;
+  }
+  
+  #appointments .actions {
+    grid-template-columns: 1fr;
+  }
+  
+  #appointments .info p {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  #appointments table th,
+  #appointments table td {
+    padding: 10px 8px;
+  }
+}
