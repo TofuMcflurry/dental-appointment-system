@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Appointment extends Model
 {
     protected $table = 'appointments';
     protected $primaryKey = 'appointment_id';
-    public $timestamps = false;  // Set to true if you add created_at/updated_at columns
+    public $timestamps = false;
 
     protected $fillable = [
         'patient_name',
@@ -33,9 +34,17 @@ class Appointment extends Model
         });
     }
 
-    // Relationships
+    // Updated relationship - use the correct foreign key and local key
     public function patient()
     {
-        return $this->belongsTo(User::class, 'patient_id');  // Ensure User model exists
+        return $this->belongsTo(User::class, 'patient_id', 'user_id');
+    }
+
+    // Add accessor for formatted appointment date
+    public function getFormattedAppointmentDateAttribute()
+    {
+        return $this->appointment_date 
+            ? \Carbon\Carbon::parse($this->appointment_date)->format('M d, Y h:i A')
+            : 'N/A';
     }
 }

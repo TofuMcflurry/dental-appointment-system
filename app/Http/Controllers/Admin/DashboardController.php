@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Appointment;
 use App\Models\Patient;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -65,10 +66,27 @@ class DashboardController extends Controller
         return view('dashboard.patients', compact('patients'));
     }
 
-    public function audittrail()
+    public function audittrail(Request $request)
     {
-        return view('dashboard.audittrail');
+        $query = Appointment::with(['patient'])
+            ->orderBy('appointment_date', 'DESC')
+            ->orderBy('appointment_id', 'DESC');
+
+        // Search by patient name
+        if ($request->has('search') && $request->search) {
+            $query->where('patient_name', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter by status
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $appointments = $query->get();
+
+        return view('dashboard.audittrail', compact('appointments'));
     }
+
 
     public function settings()
     {

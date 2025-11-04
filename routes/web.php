@@ -38,7 +38,8 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->name('admin.')->group(
     Route::patch('/appointments/{id}/status', [AppointmentController::class, 'updateStatus'])->name('appointments.status');
 
     Route::get('/patients', [DashboardController::class, 'patients'])->name('patients');
-    Route::get('/audittrail', [DashboardController::class, 'audittrail'])->name('audittrail');
+
+   Route::get('/audittrail', [DashboardController::class, 'audittrail'])->name('audittrail');
 
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
     Route::put('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
