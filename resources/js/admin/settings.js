@@ -1,136 +1,164 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const settingsPage = document.querySelector(".settings-page");
-  if (!settingsPage) return; // Exit if not on settings page
+import { DarkMode } from './base.js';
+import { Page } from './base.js';
 
-  // Elements
-  const darkModeCheckbox = settingsPage.querySelector("#darkMode");
-  const saveBtn = settingsPage.querySelector("#saveBtn");
-  const cancelBtn = settingsPage.querySelector("#cancelBtn");
-  const togglePassword = settingsPage.querySelector("#togglePassword");
-  const passwordInput = settingsPage.querySelector("#password");
-  const languageSelect = settingsPage.querySelector("#language");
-
-  // Dark mode toggle
-  function applyDarkMode(state) {
-    document.body.classList.toggle("dark", !!state);
-    if (darkModeCheckbox) darkModeCheckbox.checked = !!state;
-  }
-  if (darkModeCheckbox) {
-    darkModeCheckbox.addEventListener("change", () => {
-      applyDarkMode(darkModeCheckbox.checked);
-      localStorage.setItem("darkMode", darkModeCheckbox.checked ? "true" : "false");
-    });
-  }
-
-  // Show/Hide password
-  if (togglePassword && passwordInput) {
-    togglePassword.addEventListener("click", () => {
-      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-      passwordInput.setAttribute("type", type);
-      togglePassword.textContent = type === "password" ? "Show" : "Hide";
-    });
-  }
-
-  // Language translations
-  const translations = {
-    en: {
-      profile_settings: "Profile Settings",
-      name: "Name",
-      email: "Email",
-      phone: "Phone",
-      security: "Security",
-      password: "Password",
-      show: "Show",
-      hide: "Hide",
-      preferences: "Preferences",
-      enable_email: "Enable Email Notification",
-      dark_mode: "Dark Mode",
-      language: "Language",
-      save: "Save Changes",
-      cancel: "Cancel"
-    },
-    fil: {
-      profile_settings: "Mga Setting ng Profile",
-      name: "Pangalan",
-      email: "Email",
-      phone: "Telepono",
-      security: "Seguridad",
-      password: "Password",
-      show: "Ipakita",
-      hide: "Itago",
-      preferences: "Mga Kagustuhan",
-      enable_email: "Paganahin ang Abiso sa Email",
-      dark_mode: "Madilim na Mode",
-      language: "Wika",
-      save: "I-save ang Pagbabago",
-      cancel: "Kanselahin"
+class SettingsPage extends Page {
+  constructor(containerId = 'settingsPage', title = 'Settings', app = null) {
+    super(containerId, title, app);
+    
+    if (this.container) {
+      this._wireControls();
     }
-  };
+  }
 
-  function setLanguage(lang) {
-    settingsPage.querySelectorAll("[data-i18n]").forEach(el => {
-      const key = el.getAttribute("data-i18n");
-      if (translations[lang] && translations[lang][key]) {
-        el.textContent = translations[lang][key];
+  _wireControls() {
+    if (!this.container) return;
+
+    const form = this.container.querySelector('#settingsForm');
+    const togglePw = this.container.querySelector('#togglePassword');
+    const pwField = this.container.querySelector('#password');
+    const darkMode = this.container.querySelector('#dark_mode');
+    const saveBtn = this.container.querySelector('#saveBtn');
+
+    console.log('🔧 Wiring controls...');
+    console.log('Toggle button:', togglePw);
+    console.log('Password field:', pwField);
+    console.log('Save button:', saveBtn);
+
+    // Toggle password visibility
+    if (togglePw && pwField) {
+      togglePw.addEventListener('click', () => {
+        console.log('👁️ Toggle button clicked');
+        const isHidden = pwField.type === 'password';
+        pwField.type = isHidden ? 'text' : 'password';
+        togglePw.textContent = isHidden ? 'Hide' : 'Show';
+        console.log('Password type changed to:', pwField.type);
+      });
+    } else {
+      console.log('❌ Toggle elements not found');
+    }
+
+    // Dark mode toggle
+    darkMode?.addEventListener('change', (e) => {
+      const isDarkMode = e.target.checked;
+      localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
+      DarkMode.apply();
+    });
+
+    // ✅ FIXED FORM SUBMISSION WITH BUTTON STATE MANAGEMENT
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      console.log('🔄 Form submission started...');
+      
+      let saveBtn = this.container.querySelector('#saveBtn');
+      let data;
+      
+      // ✅ ADDED: Prevent multiple clicks
+      if (saveBtn && saveBtn.disabled) {
+        console.log('🛑 Button already clicked, ignoring...');
+        return;
+      }
+      
+      // ✅ ADDED: Set loading state
+      const originalText = saveBtn ? saveBtn.textContent : 'Save Changes';
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+      }
+      
+      const formData = new FormData(form);
+      
+      try {
+        console.log('📤 Sending request to:', form.action);
+        
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+          },
+          body: formData
+        });
+
+        console.log('📥 Response status:', response.status);
+        console.log('📥 Response ok:', response.ok);
+
+        data = await response.json();
+        console.log('📦 Response data:', data);
+
+        // Check for OTP required
+        if (data.otp_required === true) {
+          console.log('🔐 OTP required, redirecting...');
+          // ✅ ADDED: Re-enable button before redirect
+          if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalText;
+          }
+          window.showToast({
+            title: 'Verification Required!',
+            message: data.message,
+            type: 'info',
+            duration: 3000
+          });
+          setTimeout(() => {
+            window.location.href = '/patient/verify-otp';
+          }, 1500);
+          return;
+        }
+
+        // Handle success
+        if (response.ok) {
+          window.showToast({
+            title: 'Success!',
+            message: data.message || 'Settings updated successfully!',
+            type: 'success'
+          });
+          const darkModeChecked = darkMode?.checked || false;
+          localStorage.setItem('darkMode', darkModeChecked ? 'true' : 'false');
+          DarkMode.apply();
+        } else {
+          // Handle errors
+          if (data.errors) {
+            const errorMessages = Object.values(data.errors).flat().join('\n');
+            window.showToast({
+              title: 'Error',
+              message: errorMessages,
+              type: 'error'
+            });
+          } else {
+            window.showToast({
+              title: 'Error',
+              message: data.message || 'Error saving settings',
+              type: 'error'
+            });
+          }
+        }
+      } catch (error) {
+        console.error('❌ Fetch error details:', error);
+        console.error('❌ Error name:', error.name);
+        console.error('❌ Error message:', error.message);
+        
+        window.showToast({
+          title: 'Network Error',
+          message: 'Please check your connection and try again',
+          type: 'error'
+        });
+      } finally {
+        // ✅ ADDED: Always re-enable button (except when redirecting)
+        if (saveBtn && !data?.otp_required) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Save Changes';
+        }
       }
     });
-    localStorage.setItem("language", lang);
-  }
 
-  if (languageSelect) {
-    languageSelect.addEventListener("change", function() {
-      setLanguage(this.value);
+    // Cancel button
+    this.container.querySelector('#cancelBtnSettings')?.addEventListener('click', () => {
+      if (confirm('Discard all changes?')) {
+        window.location.reload();
+      }
     });
   }
+}
 
-  // Save / Cancel
-  function loadSettings() {
-    if (settingsPage.querySelector("#name")) 
-      settingsPage.querySelector("#name").value = localStorage.getItem("name") || "";
-    if (settingsPage.querySelector("#email")) 
-      settingsPage.querySelector("#email").value = localStorage.getItem("email") || "";
-    if (settingsPage.querySelector("#phone")) 
-      settingsPage.querySelector("#phone").value = localStorage.getItem("phone") || "";
-    if (passwordInput) 
-      passwordInput.value = localStorage.getItem("password") || "";
-    if (settingsPage.querySelector("#emailNotif")) 
-      settingsPage.querySelector("#emailNotif").checked = localStorage.getItem("emailNotif") === "true";
-
-    const savedLang = localStorage.getItem("language") || "en";
-    if (languageSelect) languageSelect.value = savedLang;
-    setLanguage(savedLang);
-
-    const savedDark = localStorage.getItem("darkMode") === "true";
-    applyDarkMode(savedDark);
-  }
-
-  if (saveBtn) {
-    saveBtn.addEventListener("click", () => {
-      if (settingsPage.querySelector("#name")) 
-        localStorage.setItem("name", settingsPage.querySelector("#name").value);
-      if (settingsPage.querySelector("#email")) 
-        localStorage.setItem("email", settingsPage.querySelector("#email").value);
-      if (settingsPage.querySelector("#phone")) 
-        localStorage.setItem("phone", settingsPage.querySelector("#phone").value);
-      if (passwordInput) 
-        localStorage.setItem("password", passwordInput.value);
-      if (settingsPage.querySelector("#emailNotif")) 
-        localStorage.setItem("emailNotif", settingsPage.querySelector("#emailNotif").checked ? "true" : "false");
-      if (languageSelect) 
-        localStorage.setItem("language", languageSelect.value);
-      if (darkModeCheckbox) 
-        localStorage.setItem("darkMode", darkModeCheckbox.checked ? "true" : "false");
-      alert("✅ Settings saved");
-    });
-  }
-
-  if (cancelBtn) {
-    cancelBtn.addEventListener("click", () => {
-      loadSettings();
-      alert("✖ Changes reverted");
-    });
-  }
-
-  // Init on page load
-  loadSettings();
-});
+export { SettingsPage };

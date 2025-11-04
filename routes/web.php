@@ -39,7 +39,16 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->name('admin.')->group(
 
     Route::get('/patients', [DashboardController::class, 'patients'])->name('patients');
     Route::get('/audittrail', [DashboardController::class, 'audittrail'])->name('audittrail');
+
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
+    Route::put('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
+
+    // OTP Routes - INSIDE ADMIN GROUP
+    Route::get('/verify-otp', function() {
+        return view('auth.verify-otp');
+    })->name('verify.otp.page');
+    Route::post('/verify-otp', [AdminSettingsController::class, 'verifyOTP'])->name('verify.otp.submit');
+    Route::post('/resend-otp', [AdminSettingsController::class, 'resendOTP'])->name('resend.otp');
 });
 
 // Patient Routes
