@@ -15,6 +15,10 @@ Route::get('/', function () {
         : view('welcome');
 });
 
+Route::get('/developer-modal', function () {
+    return view('developer-modal')->render();
+});
+
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 // GENERIC DASHBOARD ROUTE
