@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="description" content="Experience world-class dental care at LCAD Dental Clinic. 50,000+ happy patients, 80+ expert dentists, 99.6% success rate.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
     <title>LCAD Dental Clinic | Expert Dental Care & Beautiful Smiles</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

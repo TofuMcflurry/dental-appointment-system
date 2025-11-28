@@ -7,6 +7,8 @@ use App\Http\Controllers\Patient\NotificationsController;
 use App\Http\Controllers\patient\PatientSettingsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
 
 // Root Route
 Route::get('/', function () {
@@ -21,6 +23,15 @@ Route::get('/developer-modal', function () {
 
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+
+    // Redirect to welcome page
+    return redirect('/');
+})->name('logout');
+
 // GENERIC DASHBOARD ROUTE
 Route::get('/dashboard', function () {
     $user = auth()->user();
@@ -28,10 +39,18 @@ Route::get('/dashboard', function () {
     if ($user->role === 'admin') {
         return redirect()->route('admin.dashboard');
     }
+    
+    if ($user->role === 'orthopedic') {
+        return redirect('http://localhost:8080/'); // React app
+    }
 
     return redirect()->route('patient.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::middleware(['auth', 'role:orthopedic'])->group(function () {
+    Route::get('/orthopedic/patients', [OrthopedicController::class, 'getPatients']);
+    Route::post('/orthopedic/appointments', [OrthopedicController::class, 'createAppointment']);
+});
 
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', 'verified'])->name('admin.')->group(function () {
