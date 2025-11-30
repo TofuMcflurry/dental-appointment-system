@@ -8,16 +8,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, string $role): Response
     {
-         if (! $request->user() || $request->user()->role !== $role) {
-            // redirect to home if role doesn't match
-            return redirect('/')->with('error', 'Unauthorized access.');
+        if (!auth()->check()) {
+            return redirect('/login');
+        }
+
+        if (auth()->user()->role !== $role) {
+            abort(403, 'Unauthorized access.');
         }
 
         return $next($request);

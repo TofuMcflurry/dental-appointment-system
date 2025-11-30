@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; // ✅ IMPORTANT: Add this!
 
 class LoginController extends Controller
 {
@@ -18,11 +19,13 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
-            // Authentication passed
-            return response()->json(['success' => true]);
+            // ✅ TRADITIONAL FORM - REDIRECT TO DASHBOARD
+            return redirect('/dashboard'); // Dito na magde-decide ang routes kung saan i-redirect
         }
 
-        // Authentication failed
-        return response()->json(['success' => false, 'message' => 'Invalid credentials']);
+        // Authentication failed - RETURN BACK TO LOGIN PAGE WITH ERRORS
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
     }
 }

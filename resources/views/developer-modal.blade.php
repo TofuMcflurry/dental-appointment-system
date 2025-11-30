@@ -10,7 +10,7 @@
     <!-- Header with profile -->
     <div class="profile-header" style="text-align: center; background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%); color: white; padding: 60px 20px 40px; position: relative; margin-top: 0;">
         <img src="{{ asset('images/Profile.jpg') }}" alt="Sunny Pantig - Software Developer" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid white; object-fit: cover; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);">
-        <h1 style="margin: 10px 0 8px; font-size: 2.2rem; font-weight: 700;">Sunny Pantig</h1>
+        <h1 style="margin: 10px 0 8px; font-size: 2.2rem; font-weight: 700;">Lei Pantig</h1>
         <p style="font-size: 1.1rem; opacity: 0.9; font-weight: 300; margin-bottom: 10px;">Software Developer | Database Architect | Future Software Engineer</p>
         <div class="tagline" style="display: inline-block; padding: 6px 16px; background: rgba(255, 255, 255, 0.2); border-radius: 50px; font-size: 0.9rem; font-weight: 500;">Building digital solutions with clean code and modern technologies</div>
     </div>
@@ -31,8 +31,10 @@
                 <div class="stack-category" style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); text-align: center;">
                     <h3 style="color: #2D3748; margin-bottom: 15px; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; justify-content: center;"><i class="fas fa-code" style="margin-right: 8px; color: #4299E1;"></i> Frontend</h3>
                     <div class="tech-item" style="background: #F7FAFC; padding: 8px 12px; border-radius: 6px; margin: 6px 0; font-size: 0.85rem; color: #4A5568;">HTML5, CSS3, JavaScript</div>
+                    <div class="tech-item" style="background: #F7FAFC; padding: 8px 12px; border-radius: 6px; margin: 6px 0; font-size: 0.85rem; color: #4A5568;">React, Vue.js</div>
                     <div class="tech-item" style="background: #F7FAFC; padding: 8px 12px; border-radius: 6px; margin: 6px 0; font-size: 0.85rem; color: #4A5568;">Blade Templates</div>
                     <div class="tech-item" style="background: #F7FAFC; padding: 8px 12px; border-radius: 6px; margin: 6px 0; font-size: 0.85rem; color: #4A5568;">Bootstrap / Tailwind CSS</div>
+
                 </div>
 
                 <div class="stack-category" style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); text-align: center;">
