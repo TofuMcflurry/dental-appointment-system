@@ -16,10 +16,8 @@
     <header>
         <div class="header-container">
             <div class="logo">
-                <div class="logo-circle">P</div>
                 <div class="logo-text">
-                    <h1>LCAD</h1>
-                    <p>Dental Clinic</p>
+                    <img src="{{ asset('images/Clinic-name-logo.svg') }}" alt="Clinic Logo" style="height: 180px;">
                 </div>
             </div>
 

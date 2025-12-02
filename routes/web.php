@@ -4,14 +4,18 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Patient\PatientDashboardController;
 use App\Http\Controllers\Patient\NotificationsController;
-use App\Http\Controllers\patient\PatientSettingsController;
+use App\Http\Controllers\Patient\PatientSettingsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\AdminSettingsController; // Make sure this exists
+use App\Http\Controllers\AppointmentController; // Make sure this exists
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-//ROOT ROUTE - WELCOME PAGE ONLY
+// Root Route
 Route::get('/', function () {
-    return view('welcome');
+    return auth()->check()
+        ? redirect()->route('dashboard')
+        : view('welcome');
 });
 
 Route::get('/developer-modal', function () {
@@ -23,12 +27,13 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 Route::post('/logout', function () {
     Auth::logout();
-    session()->invalidate();
-    session()->regenerateToken();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    
     return redirect('/');
 })->name('logout');
 
-//DASHBOARD ROUTE - AFTER LOGIN REDIRECT
+// GENERIC DASHBOARD ROUTE
 Route::get('/dashboard', function () {
     if (!auth()->check()) {
         return redirect('/login');
@@ -41,8 +46,7 @@ Route::get('/dashboard', function () {
     }
     
     if ($user->role === 'orthopedic') {
-        // ✅ REDIRECT TO REACT APP ON PORT 8080
-        return redirect('http://localhost:8080/');
+        return redirect('http://localhost:8080/'); // React app
     }
 
     if ($user->role === 'patient') {
@@ -52,111 +56,62 @@ Route::get('/dashboard', function () {
     return redirect('/');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//ORTHOPEDIC API ROUTES (for React app to call Laravel)
-Route::prefix('orthopedic')->middleware(['auth'])->group(function () {
-    Route::get('/patients', function() {
-        if (auth()->user()->role !== 'orthopedic') {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-        return response()->json(['message' => 'Orthopedic patients data']);
-    });
+// Admin Routes
+Route::prefix('admin')->middleware(['auth', 'verified'])->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     
-    Route::post('/appointments', function() {
-        if (auth()->user()->role !== 'orthopedic') {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-        return response()->json(['message' => 'Appointment created']);
-    });
+    Route::get('/appointments', [DashboardController::class, 'appointments'])->name('appointments');
+    Route::put('/appointments/{id}', [AppointmentController::class, 'update'])->name('appointments.update');
+    Route::patch('/appointments/{id}/status', [AppointmentController::class, 'updateStatus'])->name('appointments.status');
+
+    Route::get('/patients', [DashboardController::class, 'patients'])->name('patients');
+
+    // FIX THIS: Make audittrail work with Request parameter
+    Route::get('/audittrail', [DashboardController::class, 'audittrail'])->name('audittrail');
+
+    Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
+    Route::put('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
+
+    // ✅ IMPORTANT: OTP Routes for Admin
+    Route::get('/verify-otp', function() {
+        return view('auth.verify-otp');
+    })->name('verify.otp.page');
+    
+    Route::post('/verify-otp', [AdminSettingsController::class, 'verifyOTP'])->name('verify.otp.submit');
+    Route::post('/resend-otp', [AdminSettingsController::class, 'resendOTP'])->name('resend.otp');
 });
 
-//ADMIN ROUTES
-Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
-    Route::get('/dashboard', function() {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Admin access only.');
-        }
-        return app(DashboardController::class)->dashboard();
-    })->name('dashboard');
-    
-    Route::get('/appointments', function() {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Admin access only.');
-        }
-        return app(DashboardController::class)->appointments();
-    })->name('appointments');
-    
-    Route::get('/patients', function() {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Admin access only.');
-        }
-        return app(DashboardController::class)->patients();
-    })->name('patients');
-    
-    Route::get('/audittrail', function() {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Admin access only.');
-        }
-        return app(DashboardController::class)->audittrail();
-    })->name('audittrail');
-    
-    Route::get('/settings', function() {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Admin access only.');
-        }
-        return app(DashboardController::class)->settings();
-    })->name('settings');
-});
-
-//PATIENT ROUTES
+// Patient Routes
 Route::prefix('patient')->middleware(['auth', 'verified'])->name('patient.')->group(function () {
-    Route::get('/dashboard', function() {
-        if (auth()->user()->role !== 'patient') {
-            abort(403, 'Patient access only.');
-        }
-        return app(PatientDashboardController::class)->dashboard();
-    })->name('dashboard');
+    Route::get('/dashboard', [PatientDashboardController::class, 'dashboard'])->name('dashboard');
     
-    Route::get('/appointments', function() {
-        if (auth()->user()->role !== 'patient') {
-            abort(403, 'Patient access only.');
-        }
-        return app(PatientDashboardController::class)->appointments();
-    })->name('appointments');
+    Route::get('/appointments', [PatientDashboardController::class, 'appointments'])->name('appointments');
+    Route::post('/appointments', [PatientDashboardController::class, 'storeAppointment'])->name('appointments.store');
+
+    Route::get('/notifications', [NotificationsController::class, 'index'])->name('notifications');
+    Route::post('/notifications/mark-all-read', [NotificationsController::class, 'markAllRead'])->name('notifications.mark-all-read');
+    Route::post('/notifications/delete-all', [NotificationsController::class, 'deleteAll'])->name('notifications.delete-all');
+    Route::post('/notifications/{id}/toggle-read', [NotificationsController::class, 'toggleRead'])->name('notifications.toggle-read');
+    Route::delete('/notifications/{id}', [NotificationsController::class, 'delete'])->name('notifications.delete');
+
+    Route::get('/settings', [PatientSettingsController::class, 'edit'])->name('settings');
+    Route::put('/settings', [PatientSettingsController::class, 'update'])->name('settings.update');
     
-    Route::post('/appointments', function() {
-        if (auth()->user()->role !== 'patient') {
-            abort(403, 'Patient access only.');
-        }
-        return app(PatientDashboardController::class)->storeAppointment();
-    })->name('appointments.store');
+    // ✅ IMPORTANT: OTP Routes for Patient
+    Route::get('/verify-otp', function() {
+        return view('auth.verify-otp');
+    })->name('verify.otp.page'); // ✅ GET route for the page
     
-    Route::get('/notifications', function() {
-        if (auth()->user()->role !== 'patient') {
-            abort(403, 'Patient access only.');
-        }
-        return app(NotificationsController::class)->index();
-    })->name('notifications');
-    
-    Route::get('/settings', function() {
-        if (auth()->user()->role !== 'patient') {
-            abort(403, 'Patient access only.');
-        }
-        return app(PatientSettingsController::class)->edit();
-    })->name('settings');
-    
-    Route::put('/settings', function() {
-        if (auth()->user()->role !== 'patient') {
-            abort(403, 'Patient access only.');
-        }
-        return app(PatientSettingsController::class)->update();
-    })->name('settings.update');
+    Route::post('/verify-otp', [PatientSettingsController::class, 'verifyOTP'])->name('verify.otp.submit'); // ✅ POST route for form submission
+    Route::post('/resend-otp', [PatientSettingsController::class, 'resendOTP'])->name('resend.otp');
 });
 
-//PROFILE ROUTES
+// Profile Routes (requires authentication)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Authentication routes handled by Breeze
 require __DIR__ . '/auth.php';
