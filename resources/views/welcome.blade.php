@@ -41,7 +41,7 @@
         <div class="hero-content">
             <h2>LCAD Dental Clinic</h2>
             <p>Your smile is our priority. Experience world-class dental care with our team of expert dentists and state-of-the-art technology.</p>
-            <a href="#book" class="btn btn-hero">Make An Appointment</a>
+            <a href="{{ route('register') }}" class="btn btn-hero">Make An Appointment</a>
         </div>
     </section>
 

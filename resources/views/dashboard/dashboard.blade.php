@@ -22,10 +22,15 @@
         <div class="card calendar-main">
           <div class="month-header">
             <div class="month" id="calendarMonth"></div>
-            <div><button id="prevMonth">‹</button><button id="nextMonth">›</button></div>
+            <div>
+                <button id="prevMonth">‹</button>
+                <button id="nextMonth">›</button>
+            </div>
           </div>
           <div class="calendar-grid">
-            <div class="weekdays"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div>
+            <div class="weekdays">
+                <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+            </div>
             <div class="days" id="calendarDays"></div>
           </div>
         </div>
@@ -41,16 +46,36 @@
     <div style="margin-top:14px">
       <div class="card">
         <h3>Audit Trail</h3>
-        <table class="audit-table"><thead><tr><th>Date & Time</th><th>Patient</th><th>Service</th><th>Status</th></tr></thead>
-          <tbody id="auditBody"><tr><td colspan="4" class="audit-empty">No audit entries yet.</td></tr></tbody>
+        <table class="audit-table">
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Patient</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="auditBody">
+                <tr><td colspan="4" class="audit-empty">No audit entries yet.</td></tr>
+            </tbody>
         </table>
       </div>
     </div>
   </div>
+</div>
+
+{{-- Appointment Modal --}}
+<div id="appointmentModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 id="modalDate"></h3>
+        <div id="appointmentList">
+            <div class="empty-appointments">Loading appointments...</div>
+        </div>
+    </div>
 </div>
 @endsection
 
 @section('page-script')
   @vite(['resources/js/admin/dashboard.js'])
 @endsection
-

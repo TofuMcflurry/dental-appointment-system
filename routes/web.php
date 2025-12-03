@@ -59,6 +59,9 @@ Route::get('/dashboard', function () {
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', 'verified'])->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+
+    Route::get('/calendar/appointments', [DashboardController::class, 'getCalendarAppointments'])->name('calendar.appointments');
+    Route::get('/calendar/appointments-by-date', [DashboardController::class, 'getAppointmentsByDate'])->name('calendar.appointments.date');
     
     Route::get('/appointments', [DashboardController::class, 'appointments'])->name('appointments');
     Route::put('/appointments/{id}', [AppointmentController::class, 'update'])->name('appointments.update');
